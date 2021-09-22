@@ -14,11 +14,22 @@ namespace BattleArenaExtended
 
     public enum Scene
     {
-        STARTMENU,
-        NAMECREATION,
-        CHARACTERSELECTION,
+        START_MENU,
+        NAME_CREATION,
+        CHARACTER_SELECTION,
         BATTLE,
-        RESTARTMENU
+        SHOP_MENU,
+        RESTART_MENU
+    }
+
+    public enum ItemName
+    {
+        BIG_STICK,
+        BIG_WAND,
+        BIG_SHIELD,
+        FRESH_JS,
+        WOMPUS_GUN,
+        COUNT
     }
 
     public struct Item
@@ -26,6 +37,8 @@ namespace BattleArenaExtended
         public string Name;
         public float StatBoost;
         public ItemType BoostType;
+        public int Cost;
+        public ItemName ID;
     }
 
     public class Game
@@ -34,6 +47,7 @@ namespace BattleArenaExtended
         private Scene _currentScene = 0;
         private int _currentEnemyIndex = 0;
         private Player _player;
+        private Shop _shop;
         private string _playerName;
         private Entity[] _enemies;
         private Entity _currentEnemy;
@@ -75,12 +89,20 @@ namespace BattleArenaExtended
         public void InitializeItems()
         {
             // Defensive Items
-            Item bigWand = new Item { Name = "Big Wand", StatBoost = 20, BoostType = ItemType.ATTACK };
-            Item bigShield = new Item { Name = "Big Shield", StatBoost = 25, BoostType = ItemType.DEFENSE };
+            Item bigWand = new Item { Name = "Big Wand", StatBoost = 20, BoostType = ItemType.ATTACK, 
+            Cost = 25, ID = ItemName.BIG_WAND };
+            Item bigShield = new Item { Name = "Big Shield", StatBoost = 25, BoostType = ItemType.DEFENSE,
+            Cost = 22, ID = ItemName.BIG_SHIELD };
 
             // Offensive Items
-            Item bigStick = new Item { Name = "Big Stick", StatBoost = 20, BoostType = ItemType.ATTACK };
-            Item freshJays = new Item { Name = "Fresh J's", StatBoost = 10, BoostType = ItemType.DEFENSE };
+            Item bigStick = new Item { Name = "Big Stick", StatBoost = 20, BoostType = ItemType.ATTACK,
+            Cost = 2, ID = ItemName.BIG_STICK};
+            Item freshJays = new Item { Name = "Fresh J's", StatBoost = 10, BoostType = ItemType.DEFENSE,
+            Cost = 52, ID = ItemName.FRESH_JS};
+
+            // Other Items
+            Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 30, BoostType = ItemType.ATTACK,
+            Cost = 35, ID = ItemName.WOMPUS_GUN };
 
             _defensiveInventory = new Item[] { bigWand, bigShield };
             _offensiveInventory = new Item[] { bigStick, freshJays };
@@ -99,8 +121,11 @@ namespace BattleArenaExtended
             // Initalizes the Stats for Big Dude.
             Entity bigDude = new Entity("A Big Dude", 35, 30, 20);
 
+            // Initalizes the Stats for Wompus With a Gun.
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 40, 35, 20);
+
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 45, 35, 20);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 50, 35, 20);
 
             // Initalizes the list of _enemies that will be fought in this order.
             _enemies = new Entity[] { littleDude, bigDude, theFinalBoss };
@@ -118,7 +143,7 @@ namespace BattleArenaExtended
         }
 
         /// <summary>
-        /// This function is called before the applications closes
+        /// This function is called before the applications closes.
         /// </summary>
         private void End()
         {
@@ -197,14 +222,14 @@ namespace BattleArenaExtended
             switch (_currentScene)
             {
                 // ...the start menu.
-                case Scene.STARTMENU:
+                case Scene.START_MENU:
                     DisplayStartMenu();
                     break;
-                case Scene.NAMECREATION:
+                case Scene.NAME_CREATION:
                     GetPlayerName();
                     break;
                 // ...character selection.
-                case Scene.CHARACTERSELECTION:
+                case Scene.CHARACTER_SELECTION:
                     CharacterSelection();
                     break;
                 // ...fighting _enemies.
@@ -212,7 +237,7 @@ namespace BattleArenaExtended
                     Battle();
                     break;
                 // ...asking the _player to restart the game.
-                case Scene.RESTARTMENU:
+                case Scene.RESTART_MENU:
                     DisplayRestartMenu();
                     break;
             }
@@ -246,7 +271,7 @@ namespace BattleArenaExtended
             switch (choice)
             {
                 case 0:
-                    _currentScene = Scene.NAMECREATION;
+                    _currentScene = Scene.NAME_CREATION;
                     break;
                 case 1:
                     if (Load())
@@ -261,7 +286,7 @@ namespace BattleArenaExtended
                         Console.WriteLine("Load Failed");
                         Console.ReadKey(true);
                         Console.Clear();
-                        _currentScene = Scene.STARTMENU;
+                        _currentScene = Scene.START_MENU;
                     }
                     break;
             }
@@ -415,7 +440,7 @@ namespace BattleArenaExtended
 
                 if (_currentEnemyIndex >= _enemies.Length)
                 {
-                    _currentScene = Scene.RESTARTMENU;
+                    _currentScene = Scene.RESTART_MENU;
                     Console.WriteLine("You are victorious!");
                     Console.ReadKey(true);
                     Console.Clear();
@@ -432,6 +457,74 @@ namespace BattleArenaExtended
             {
                 Console.WriteLine("You have been slain.");
                 DisplayRestartMenu();
+            }
+        }
+
+        /// <summary>
+        /// Gets the item names from the shop and adds a save and quit option.
+        /// </summary>
+        /// <returns> The string for the menu options. </returns>
+        private string[] GetShopMenuOptions()
+        {
+            // Grabs the item names and their costs from the shop.
+            string[] shopItems = _shop.GetItemNames();
+
+            // Creates a new array that will append the save and quit feature to the items.
+            string[] shopOptions = new string[shopItems.Length + 2];
+
+            // Sets all of the items as menu options.
+            for (int i = 0; i < shopItems.Length; i++)
+            {
+                shopOptions[i] = shopItems[i];
+            }
+
+            // Appends the new options to the item list from the shop.
+            shopOptions[shopItems.Length] = "Leave Shop";
+
+            // Returns the new list.
+            return shopOptions;
+        }
+
+        /// <summary>
+        /// Displays the shop menu to the player, allowing them to buy the items and save or quit.
+        /// </summary>
+        private void DisplayShopMenu()
+        {
+            string[] playerInventory = _player.GetItemNames();
+
+            // Displays the player's gold and items to the screen.
+            Console.WriteLine("Your Gold: " + _player.Gold);
+            Console.WriteLine("Your Inventory: ");
+            for (int i = 0; i < playerInventory.Length; i++)
+            {
+                Console.WriteLine(playerInventory[i]);
+            }
+
+            Console.WriteLine();
+
+            // Gets the menu options from the get function.
+            string[] menuOptions = GetShopMenuOptions();
+
+            // Asks the player which item they would like to buy, and if they would like to save or quit.
+            int choice = GetInput("What will you be buying?", menuOptions);
+
+            // If the player picks...
+            if (choice == menuOptions.Length - 1)
+            {
+      
+            }
+            else if (choice == menuOptions.Length - 2)
+            {
+                Console.WriteLine("I'll keep these here for now.");
+                Console.ReadKey(true);
+                Console.Clear();
+                Save();
+            }
+            else if (!_shop.Sell(_player, choice))
+            {
+                Console.WriteLine("Very sorry. I do not go lower in my prices.");
+                Console.ReadKey(true);
+                Console.Clear();
             }
         }
     }

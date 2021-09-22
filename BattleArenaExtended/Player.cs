@@ -7,10 +7,11 @@ namespace BattleArenaExtended
 {
     class Player : Entity
     {
-        private Item[] _items;
+        private Item[] _inventory;
         private Item _currentItem;
         private int _currentItemIndex;
         private string _job;
+        private int _gold;
 
         public Item CurrentItem
         {
@@ -55,9 +56,14 @@ namespace BattleArenaExtended
             }
         }
 
+        public int Gold
+        {
+            get { return _gold; }
+        }
+
         public Player()
         {
-            _items = new Item[0];
+            _inventory = new Item[0];
             _currentItem.Name = "Nothing";
             _currentItemIndex = -1;
         }
@@ -65,14 +71,14 @@ namespace BattleArenaExtended
         public Player(Item[] items) : base()
         {
             _currentItem.Name = "Nothing";
-            _items = items;
+            _inventory = items;
             _currentItemIndex = -1;
         }
 
         public Player(string name, float health, float attackPower, float defensePower, Item[] items, string job) :
             base(name, health, attackPower, defensePower)
         {
-            _items = items;
+            _inventory = items;
             _currentItem.Name = "Nothing";
             _job = job;
             _currentItemIndex = -1;
@@ -86,7 +92,7 @@ namespace BattleArenaExtended
         public bool TryEquipItem(int index)
         {
             // Checks to see if the index is out of bounds of our _items array. If it is...
-            if (index >= _items.Length || index < 0)
+            if (index >= _inventory.Length || index < 0)
             {
                 // ...it returns false.
                 _currentItemIndex = -1;
@@ -97,7 +103,7 @@ namespace BattleArenaExtended
             _currentItemIndex = index;
 
             // Sets the current item to the item at the index.
-            _currentItem = _items[_currentItemIndex];
+            _currentItem = _inventory[_currentItemIndex];
 
             return true;
         }
@@ -125,17 +131,49 @@ namespace BattleArenaExtended
         }
 
         /// <summary>
-        /// Gets the list of item names our player currently has.
+        /// The player will attempt to buy an item. If they can, their gold will decrement by the item's cost
+        /// and the item is added to their inventory.
         /// </summary>
-        /// <returns> The list of names of items that our player has. </returns>
-        public string[] GetItemNames()
+        /// <param name="item"> The item that the player wishes to buy. </param>
+        public void Buy(Item item)
         {
-            string[] itemNames = new string[_items.Length];
+            // Creates a copy of the players inventory with a new space to add the item to.
+            Item[] newPlayerInventory = new Item[_inventory.Length + 1];
 
-            for (int i = 0; i < _items.Length; i++)
+            // Tells the player they purchased the item.
+            Console.WriteLine("You purchased " + item.Name + "!");
+
+            // Adds each item from the player's inventory to the new array.
+            for (int i = 0; i < _inventory.Length; i++)
             {
-                itemNames[i] = _items[i].Name;
+                newPlayerInventory[i] = _inventory[i];
             }
 
-            return itemNames;
+            // Subtracts the item's cost from the player's gold.
+            _gold -= item.Cost;
+
+            // Appends the new item to the end of the player's inventory.
+            newPlayerInventory[_inventory.Length] = item;
+
+            // Sets the old inventory equal to the new one so it adds the new item.
+            _inventory = newPlayerInventory;
+
+            Console.ReadKey(true);
+            Console.Clear();
+
         }
+
+        // Gets the names of the items in the player's inventory.
+        public string[] GetItemNames()
+        {
+            string[] itemList = new string[_inventory.Length];
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                itemList[i] = _inventory[i].Name;
+            }
+
+            return itemList;
+        }
+    }
+}

@@ -9,6 +9,7 @@ namespace BattleArenaExtended
     {
         DEFENSE,
         ATTACK,
+        HEALTH,
         NONE
     }
 
@@ -29,6 +30,7 @@ namespace BattleArenaExtended
         BIG_SHIELD,
         FRESH_JS,
         WOMPUS_GUN,
+        HEALTH_POTION,
         COUNT
     }
 
@@ -103,11 +105,13 @@ namespace BattleArenaExtended
             // Other Items
             Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 30, BoostType = ItemType.ATTACK,
             Cost = 35, ID = ItemName.WOMPUS_GUN };
+            Item healthPotion = new Item { Name = "Health Potion", StatBoost = 20, BoostType = ItemType.HEALTH,
+            Cost = 15, ID = ItemName.HEALTH_POTION };
 
             _defensiveInventory = new Item[] { bigWand, bigShield };
             _offensiveInventory = new Item[] { bigStick, freshJs };
 
-            Item[] itemList = new Item[] { bigWand, bigShield, bigStick, freshJs, wompusGun };
+            Item[] itemList = new Item[] { bigWand, bigShield, bigStick, freshJs, wompusGun, healthPotion };
 
             _shop = new Shop(itemList);
         }
@@ -120,19 +124,19 @@ namespace BattleArenaExtended
             _currentEnemyIndex = 0;
 
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 30, 25, 15, 15);
+            Entity littleDude = new Entity("A Little Dude", 30, 20, 15, 15);
 
             // Initalizes the Stats for Big Dude.
-            Entity bigDude = new Entity("A Big Dude", 35, 30, 20, 20);
+            Entity bigDude = new Entity("A Big Dude", 35, 25, 20, 20);
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 40, 35, 20, 30);
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 40, 30, 20, 30);
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 50, 35, 20, 50);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 50, 35, 20, 0);
 
             // Initalizes the list of _enemies that will be fought in this order.
-            _enemies = new Entity[] { littleDude, bigDude, theFinalBoss };
+            _enemies = new Entity[] { littleDude, bigDude, wompusWithGun, theFinalBoss };
 
             _currentEnemy = _enemies[_currentEnemyIndex];
 
@@ -383,7 +387,14 @@ namespace BattleArenaExtended
                 Console.Clear();
             }
 
-            Console.WriteLine("You equipped " + _player.CurrentItem.Name + "!");
+            if(_player.CurrentItem.BoostType == ItemType.HEALTH)
+            {
+                Console.WriteLine("You recovered " + _player.CurrentItem.StatBoost + " health!");
+            }
+            else
+            {
+                Console.WriteLine("You equipped " + _player.CurrentItem.Name + "!");
+            }
             Console.ReadKey(true);
             Console.Clear();
         }
@@ -452,6 +463,7 @@ namespace BattleArenaExtended
                 Console.WriteLine("You defeated " + _currentEnemy.Name + "!");
                 // Adds the gold the enemy drops to the player's gold count.
                 _player.GetGold(_currentEnemy);
+                EnterShop();
                 _currentEnemyIndex++;
 
                 if (_currentEnemyIndex >= _enemies.Length)
@@ -474,9 +486,6 @@ namespace BattleArenaExtended
                 Console.WriteLine("You have been slain.");
                 DisplayRestartMenu();
             }
-
-            // Allows the player the option to shop.
-            EnterShop();
         }
 
         /// <summary>
@@ -484,6 +493,11 @@ namespace BattleArenaExtended
         /// </summary>
         public void EnterShop()
         {
+            if (_currentEnemyIndex >= _enemies.Length)
+            {
+                return;
+            }
+
             int choice = GetInput("You come across a shop in your travels. Do you enter?", "Yes.", "No.");
 
             switch (choice)

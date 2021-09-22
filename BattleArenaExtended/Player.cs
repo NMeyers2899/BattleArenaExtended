@@ -24,7 +24,7 @@ namespace BattleArenaExtended
             {
                 if (_currentItem.BoostType == ItemType.ATTACK)
                 {
-                    return base.AttackPower + CurrentItem.StatBoost;
+                    return base.AttackPower + _currentItem.StatBoost;
                 }
 
                 return base.AttackPower;
@@ -37,7 +37,7 @@ namespace BattleArenaExtended
             {
                 if (_currentItem.BoostType == ItemType.DEFENSE)
                 {
-                    return base.DefensePower + CurrentItem.StatBoost;
+                    return base.DefensePower + _currentItem.StatBoost;
                 }
 
                 return base.DefensePower;
@@ -101,6 +101,27 @@ namespace BattleArenaExtended
 
             // Updates currentItemIndex to be equal to the given index.
             _currentItemIndex = index;
+
+            if(_inventory[_currentItemIndex].BoostType == ItemType.HEALTH)
+            {
+                _health += _inventory[_currentItemIndex].StatBoost;
+
+                Item[] newInventory = new Item[_inventory.Length - 1];
+
+                for(int i = 0; i < _inventory.Length; i++)
+                {
+                    if(!(_inventory[i].ID == _currentItem.ID))
+                    {
+                        newInventory[i] = _inventory[i];
+                    }
+                }
+
+                _inventory = newInventory;
+
+                _currentItemIndex = -1;
+
+                return true;
+            }
 
             // Sets the current item to the item at the index.
             _currentItem = _inventory[_currentItemIndex];

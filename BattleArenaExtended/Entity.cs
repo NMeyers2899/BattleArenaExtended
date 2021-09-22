@@ -9,7 +9,7 @@ namespace BattleArenaExtended
     {
         // Declares the stats of an entity.
         private string _name;
-        private float _health;
+        protected float _health;
         private float _attackPower;
         private float _defensePower;
         private int _goldAmount;
@@ -21,7 +21,7 @@ namespace BattleArenaExtended
         }
 
         // Gets the entity's health.
-        public float Health
+        public virtual float Health
         {
             get { return _health; }
         }
@@ -79,7 +79,7 @@ namespace BattleArenaExtended
         /// <returns> The amount of damage being dealt. </returns>
         public float TakeDamage(float damageAmount)
         {
-            float damageTaken = (damageAmount * 2) - _defensePower;
+            float damageTaken = damageAmount - _defensePower;
 
             if (damageTaken < 0)
             {
@@ -87,6 +87,10 @@ namespace BattleArenaExtended
             }
 
             _health -= damageTaken;
+
+            Console.WriteLine(_name + " took " + damageTaken + " damage!");
+            Console.ReadKey(true);
+            Console.Clear();
 
             return damageTaken;
         }

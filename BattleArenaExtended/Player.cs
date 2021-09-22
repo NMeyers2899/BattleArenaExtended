@@ -91,6 +91,8 @@ namespace BattleArenaExtended
         /// <returns> If the user can equip the item or not. </returns>
         public bool TryEquipItem(int index)
         {
+            int previousIndex = _currentItemIndex;
+
             // Checks to see if the index is out of bounds of our _items array. If it is...
             if (index >= _inventory.Length || index < 0)
             {
@@ -102,12 +104,15 @@ namespace BattleArenaExtended
             // Updates currentItemIndex to be equal to the given index.
             _currentItemIndex = index;
 
-            if(_inventory[_currentItemIndex].BoostType == ItemType.HEALTH)
+            // If the item boosts health...
+            if(_currentItem.BoostType == ItemType.HEALTH)
             {
+                // ...add the stat boost of the item to the player's health...
                 _health += _inventory[_currentItemIndex].StatBoost;
 
                 Item[] newInventory = new Item[_inventory.Length - 1];
 
+                // ...and remove the item from the inventory.
                 for(int i = 0; i < _inventory.Length; i++)
                 {
                     if(!(_inventory[i].ID == _currentItem.ID))
@@ -115,6 +120,8 @@ namespace BattleArenaExtended
                         newInventory[i] = _inventory[i];
                     }
                 }
+
+                _currentItem = _inventory[previousIndex];
 
                 _inventory = newInventory;
 

@@ -79,7 +79,7 @@ namespace BattleArenaExtended
         /// <returns> The amount of damage being dealt. </returns>
         public float TakeDamage(float damageAmount)
         {
-            float damageTaken = damageAmount - _defensePower;
+            float damageTaken = damageAmount - DefensePower;
 
             if (damageTaken < 0)
             {
@@ -102,15 +102,7 @@ namespace BattleArenaExtended
         /// <returns> It will return the damage that is being taken. </returns>
         public float Attack(Entity defender)
         {
-            return defender.TakeDamage(_attackPower);
-        }
-
-        public virtual void Save(StreamWriter writer)
-        {
-            writer.WriteLine(_name);
-            writer.WriteLine(_health);
-            writer.WriteLine(_attackPower);
-            writer.WriteLine(_defensePower);
+            return defender.TakeDamage(AttackPower);
         }
     }
 }

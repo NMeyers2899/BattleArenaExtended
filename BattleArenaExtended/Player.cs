@@ -75,8 +75,8 @@ namespace BattleArenaExtended
             _currentItemIndex = -1;
         }
 
-        public Player(string name, float health, float attackPower, float defensePower, Item[] items, string job) :
-            base(name, health, attackPower, defensePower)
+        public Player(string name, float health, float attackPower, float defensePower, Item[] items, string job,
+            int goldAmount = 0) : base(name, health, attackPower, defensePower, goldAmount)
         {
             _inventory = items;
             _currentItem.Name = "Nothing";
@@ -174,6 +174,15 @@ namespace BattleArenaExtended
             }
 
             return itemList;
+        }
+
+        /// <summary>
+        /// The player adds the amount of gold an enemy drops to their gold amount.
+        /// </summary>
+        /// <param name="enemy"> The enemy whose gold the player is taking. </param>
+        public void GetGold(Entity enemy)
+        {
+            _gold += enemy.GoldAmount;
         }
     }
 }

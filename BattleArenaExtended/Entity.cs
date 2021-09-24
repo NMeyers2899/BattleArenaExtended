@@ -104,5 +104,51 @@ namespace BattleArenaExtended
         {
             return defender.TakeDamage(AttackPower);
         }
+
+        /// <summary>
+        /// Saves the stats of the entity to a save file.
+        /// </summary>
+        /// <param name="writer"> The writer that saves the data. </param>
+        public virtual void Save(StreamWriter writer)
+        {
+            writer.WriteLine(_name);
+            writer.WriteLine(_health);
+            writer.WriteLine(_attackPower);
+            writer.WriteLine(_defensePower);
+            writer.WriteLine(_goldAmount);
+        }
+
+        /// <summary>
+        /// Loads the stats for the enemy that the player is battling.
+        /// </summary>
+        /// <param name="reader"> The reader that is currently reading from the save file. </param>
+        /// <param name="itemList"> The list of items the the player will use to load their inventory. </param>
+        /// <returns> If it could load correctly. </returns>
+        public virtual bool Load(StreamReader reader, Item[] itemList)
+        {
+            _name = reader.ReadLine();
+
+            if (!float.TryParse(reader.ReadLine(), out _health))
+            {
+                return false;
+            }
+
+            if (!float.TryParse(reader.ReadLine(), out _attackPower))
+            {
+                return false;
+            }
+
+            if (!float.TryParse(reader.ReadLine(), out _defensePower))
+            {
+                return false;
+            }
+
+            if(!int.TryParse(reader.ReadLine(), out _goldAmount))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

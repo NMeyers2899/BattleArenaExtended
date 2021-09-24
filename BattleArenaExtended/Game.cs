@@ -55,6 +55,7 @@ namespace BattleArenaExtended
         private Entity _currentEnemy;
         private Item[] _offensiveInventory;
         private Item[] _defensiveInventory;
+        public Item[] _itemList;
 
         /// <summary>
         /// Function that starts the main game loop.
@@ -76,10 +77,6 @@ namespace BattleArenaExtended
         /// </summary>
         private void Start()
         {
-            _gameOver = false;
-
-            _currentScene = 0;
-
             InitializeEnemies();
 
             InitializeItems();
@@ -111,9 +108,9 @@ namespace BattleArenaExtended
             _defensiveInventory = new Item[] { bigWand, bigShield };
             _offensiveInventory = new Item[] { bigStick, freshJs };
 
-            Item[] itemList = new Item[] { bigWand, bigShield, bigStick, freshJs, wompusGun, healthPotion };
+            _itemList = new Item[] { bigWand, bigShield, bigStick, freshJs, wompusGun, healthPotion };
 
-            _shop = new Shop(itemList);
+            _shop = new Shop(_itemList);
         }
 
         /// <summary>
@@ -160,11 +157,77 @@ namespace BattleArenaExtended
 
         private void Save()
         {
+            // Opens the writer for the save file.
+            StreamWriter writer = new StreamWriter("SaveData.txt");
 
+            // Writes down the current scene.
+            writer.WriteLine(_currentScene);
+
+            // Saves the current enemy index.
+            writer.WriteLine(_currentEnemyIndex);
+
+            // Saves the current stats for the enemy.
+            _currentEnemy.Save(writer);
+
+            // Saves the current stats for the player.
+            _player.Save(writer);
+
+            // Closes the file.
+            writer.Close();
         }
 
         private bool Load()
         {
+            // Checks to see if the save file exists. If it does not...
+            if (!File.Exists("SaveData.txt"))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Opens the reader for the save file.
+            StreamReader reader = new StreamReader("SaveData.txt");
+
+            // Tries to read the current scene and if it can't...
+            if(!Scene.TryParse(reader.ReadLine(), out _currentScene))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Sets the current enemy index from the file. If it can't...
+            if (!int.TryParse(reader.ReadLine(), out _currentEnemyIndex))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Creates a new instance of the current enemy.
+            _currentEnemy = new Entity();
+
+            // Tries to load the current enemy, if it can't...
+            if (!_currentEnemy.Load(reader, _itemList))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Updates the enemy array to the current enemy's stats.
+            _enemies[_currentEnemyIndex] = _currentEnemy;
+
+            // Creates a new instance of the current enemy.
+            _player = new Player();
+
+            // Checks to see if the player can load their previous stats, if not...
+            if (!_player.Load(reader, _itemList))
+            {
+                // ...it returns false;
+                return false;
+            }
+
+            // Closes the file.
+            reader.Close();
+
             return true;
         }
 
@@ -377,24 +440,23 @@ namespace BattleArenaExtended
             // Get the item index.
             int choice = GetInput("Select an item to equip.", _player.GetItemNames());
 
+            Item previousItem = _player.CurrentItem;
+
             // Equip the item of the given index.
             _player.TryEquipItem(choice);
 
-            if (!_player.TryEquipItem(choice))
+            // Checks to see if the player equipped an item they had before.
+            if(_player.CurrentItem.ID == previousItem.ID)
             {
-                Console.WriteLine("You couldn't find that item in the bag.");
-                Console.ReadKey(true);
-                Console.Clear();
+                return;
             }
 
-            if(_player.CurrentItem.BoostType == ItemType.HEALTH)
-            {
-                Console.WriteLine("You recovered " + _player.CurrentItem.StatBoost + " health!");
-            }
-            else
+            if(_player.CurrentItem.BoostType == ItemType.ATTACK || 
+                _player.CurrentItem.BoostType == ItemType.DEFENSE)
             {
                 Console.WriteLine("You equipped " + _player.CurrentItem.Name + "!");
             }
+
             Console.ReadKey(true);
             Console.Clear();
         }
@@ -461,12 +523,22 @@ namespace BattleArenaExtended
             if (_currentEnemy.Health <= 0)
             {
                 Console.WriteLine("You defeated " + _currentEnemy.Name + "!");
+                Console.ReadKey(true);
+                Console.Clear();
+
                 // Adds the gold the enemy drops to the player's gold count.
                 _player.GetGold(_currentEnemy);
-                EnterShop();
+
                 _currentEnemyIndex++;
 
-                if (_currentEnemyIndex >= _enemies.Length)
+                // If the player has not killed all the enemies, if they have not...
+                if (!(_currentEnemyIndex >= _enemies.Length))
+                {
+                    // ...ask the player if they wish to enter the shop.
+                    EnterShop();
+                }
+                // Check to see if the player has defeated every enemy.
+                else
                 {
                     _currentScene = Scene.RESTART_MENU;
                     Console.WriteLine("You are victorious!");

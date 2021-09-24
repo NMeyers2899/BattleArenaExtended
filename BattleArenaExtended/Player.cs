@@ -104,11 +104,17 @@ namespace BattleArenaExtended
             // Updates currentItemIndex to be equal to the given index.
             _currentItemIndex = index;
 
+            // Sets the current item to the item at the index.
+            _currentItem = _inventory[_currentItemIndex];
+
             // If the item boosts health...
-            if(_currentItem.BoostType == ItemType.HEALTH)
+            if (_currentItem.BoostType == ItemType.HEALTH)
             {
                 // ...add the stat boost of the item to the player's health...
                 _health += _inventory[_currentItemIndex].StatBoost;
+                Console.WriteLine("You recovered " + _currentItem.StatBoost + " health!");
+                Console.ReadKey(true);
+                Console.Clear();
 
                 Item[] newInventory = new Item[_inventory.Length - 1];
 
@@ -125,13 +131,8 @@ namespace BattleArenaExtended
 
                 _inventory = newInventory;
 
-                _currentItemIndex = -1;
-
                 return true;
             }
-
-            // Sets the current item to the item at the index.
-            _currentItem = _inventory[_currentItemIndex];
 
             return true;
         }
@@ -211,6 +212,95 @@ namespace BattleArenaExtended
         public void GetGold(Entity enemy)
         {
             _gold += enemy.GoldAmount;
+        }
+
+        /// <summary>
+        /// Saves what is important for the player to the file.
+        /// </summary>
+        /// <param name="writer"> What writes to the file. </param>
+        public override void Save(StreamWriter writer)
+        {
+            writer.WriteLine(_job);
+            base.Save(writer);
+            writer.WriteLine(_inventory.Length);
+            writer.WriteLine(_gold);
+            writer.WriteLine(_currentItemIndex);
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                writer.WriteLine(_inventory[i].ID);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to load the player's previous information.
+        /// </summary>
+        /// <param name="reader"> What reads the save file. </param>
+        /// <param name="itemList"> The list of items the the player will use to load their inventory. </param>
+        /// <returns> If the player's information could be properly loaded. </returns>
+        public override bool Load(StreamReader reader, Item[] itemList)
+        {
+            // Sets the job equal to the player's previous job.
+            _job = reader.ReadLine();
+
+            // Checks to see if the base load of the entity fails. If it does...
+            if (!base.Load(reader, itemList))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Checks to see if the reader can read the player's inventory size, if it can't...
+            if (!int.TryParse(reader.ReadLine(), out int length))
+            {
+                // ...it returns false;
+                return false;
+            }
+
+            // This sets the inventory size to the read length.
+            _inventory = new Item[length];
+
+            // Checks to see if it can load the player's gold. If it can't...
+            if (!int.TryParse(reader.ReadLine(), out _gold))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Checks to see if it can get the current item index. It it can't...
+            if (!int.TryParse(reader.ReadLine(), out _currentItemIndex))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            int i = 0;
+
+            while (!reader.EndOfStream)
+            {
+                // Checks to see if the next line is an item's ID. If it isn't...
+                if (!ItemName.TryParse(reader.ReadLine(), out ItemName itemID))
+                {
+                    // ...it returns false.
+                    return false;
+                }
+
+                for (int j = 0; j < itemList.Length; j++)
+                {
+                    // Checks to see if the itemID found is the same as an item in the list...
+                    if (itemID == itemList[j].ID)
+                    {
+                        // ...and if it is, it sets the iventory at the current positon equal to the item
+                        // in the item list.
+                        _inventory[i] = itemList[j];
+                    }
+                }
+
+                i++;
+            }
+
+            // If everything was found correctly, it attempts to equip the item.
+            return TryEquipItem(_currentItemIndex);
         }
     }
 }

@@ -118,18 +118,41 @@ namespace BattleArenaExtended
 
                 Item[] newInventory = new Item[_inventory.Length - 1];
 
+                int j = 0;
+
+                bool itemRemoved = false;
+
                 // ...and remove the item from the inventory.
                 for(int i = 0; i < _inventory.Length; i++)
                 {
-                    if(!(_inventory[i].ID == _currentItem.ID))
+                    if(_inventory[i].ID != _currentItem.ID || itemRemoved)
                     {
-                        newInventory[i] = _inventory[i];
+                        newInventory[j] = _inventory[i];
+                        j++;
+                    }
+                    else
+                    {
+                        itemRemoved = true;
                     }
                 }
 
-                _currentItem = _inventory[previousIndex];
-
+                // Sets the old inventory equal to the new one.
                 _inventory = newInventory;
+
+                // Checks to see if there was no item previously equipped.
+                if (previousIndex == -1)
+                {
+                    return true;
+                }
+                // Checks to see if the previous index was the last item in the old array. If it is...
+                else if (previousIndex > _inventory.Length)
+                {
+                    // ...subtract one from the previous index.
+                    previousIndex--;
+                }
+
+                // Sets the current item 
+                _currentItem = _inventory[previousIndex];
 
                 return true;
             }
@@ -300,7 +323,9 @@ namespace BattleArenaExtended
             }
 
             // If everything was found correctly, it attempts to equip the item.
-            return TryEquipItem(_currentItemIndex);
+            TryEquipItem(_currentItemIndex);
+
+            return true;
         }
     }
 }

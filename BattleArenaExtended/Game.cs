@@ -56,6 +56,8 @@ namespace BattleArenaExtended
         private Item[] _offensiveInventory;
         private Item[] _defensiveInventory;
         private Item[] _itemList;
+        private Random randomNumber = new Random();
+        private int _battlesFought = 0;
 
         /// <summary>
         /// Function that starts the main game loop.
@@ -118,8 +120,6 @@ namespace BattleArenaExtended
         /// </summary>
         private void InitializeEnemies()
         {
-            _currentEnemyIndex = 0;
-
             // Initalizes the Stats for Little Dude.
             Entity littleDude = new Entity("A Little Dude", 30, 20, 15, 15);
 
@@ -135,7 +135,13 @@ namespace BattleArenaExtended
             // Initalizes the list of _enemies that will be fought in this order.
             _enemies = new Entity[] { littleDude, bigDude, wompusWithGun, theFinalBoss };
 
+            int randomEnemy = randomNumber.Next(0, _enemies.Length);
+
+            _currentEnemyIndex = randomEnemy;
+
             _currentEnemy = _enemies[_currentEnemyIndex];
+
+
 
         }
 
@@ -152,6 +158,8 @@ namespace BattleArenaExtended
         /// </summary>
         private void End()
         {
+            Console.WriteLine("You defeated " + _battlesFought + " enemies");
+
             Console.WriteLine("Farewell " + _player.Name + "!");
         }
 
@@ -451,14 +459,15 @@ namespace BattleArenaExtended
                 return;
             }
 
+            // If the item that was equipped is an attack or defense type...
             if(_player.CurrentItem.BoostType == ItemType.ATTACK || 
                 _player.CurrentItem.BoostType == ItemType.DEFENSE)
             {
+                // ...it lets the player know which item they equipped.
                 Console.WriteLine("You equipped " + _player.CurrentItem.Name + "!");
+                Console.ReadKey(true);
+                Console.Clear();
             }
-
-            Console.ReadKey(true);
-            Console.Clear();
         }
 
         /// <summary>
@@ -523,16 +532,15 @@ namespace BattleArenaExtended
             if (_currentEnemy.Health <= 0)
             {
                 Console.WriteLine("You defeated " + _currentEnemy.Name + "!");
+                _battlesFought++;
                 Console.ReadKey(true);
                 Console.Clear();
 
                 // Adds the gold the enemy drops to the player's gold count.
                 _player.GetGold(_currentEnemy);
 
-                _currentEnemyIndex++;
-
                 // If the player has not killed all the enemies, if they have not...
-                if (!(_currentEnemyIndex >= _enemies.Length))
+                if (!(_currentEnemy.Name == "Krazarackaradareda the World Eater"))
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
@@ -546,6 +554,8 @@ namespace BattleArenaExtended
                     Console.Clear();
                     return;
                 }
+
+                InitializeEnemies();
 
                 _currentEnemy = _enemies[_currentEnemyIndex];
                 Console.ReadKey(true);

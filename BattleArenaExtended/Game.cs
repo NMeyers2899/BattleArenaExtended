@@ -55,7 +55,7 @@ namespace BattleArenaExtended
         private Entity _currentEnemy;
         private Item[] _offensiveInventory;
         private Item[] _defensiveInventory;
-        public Item[] _itemList;
+        private Item[] _itemList;
 
         /// <summary>
         /// Function that starts the main game loop.

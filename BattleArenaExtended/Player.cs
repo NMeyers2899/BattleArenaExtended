@@ -145,7 +145,7 @@ namespace BattleArenaExtended
                     return true;
                 }
                 // Checks to see if the previous index was the last item in the old array. If it is...
-                else if (previousIndex > _inventory.Length)
+                else if (previousIndex >= _inventory.Length)
                 {
                     // ...subtract one from the previous index.
                     previousIndex--;

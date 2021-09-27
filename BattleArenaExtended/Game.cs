@@ -38,6 +38,8 @@ namespace BattleArenaExtended
         SMALL_SHIELD,
         THAEVE_BOW,
         PROTECTION_BAND,
+        JUDGEMENT_BLADE,
+        AEGIS,
         COUNT
     }
 
@@ -68,8 +70,7 @@ namespace BattleArenaExtended
         private Item[] _itemList3;
         private Item[] _itemList4;
         private Item[] _itemList5;
-        private Random randomNumber = new Random();
-        private int _battlesFought = 0;
+        private Random _randomNumber = new Random();
         private int _currentLevel = 1;
 
         /// <summary>
@@ -108,15 +109,15 @@ namespace BattleArenaExtended
 
             // Initalizes the stats for the Big Shield.
             Item bigShield = new Item { Name = "Big Shield", StatBoost = 22, BoostType = ItemType.DEFENSE,
-            Cost = 28, ID = ItemName.BIG_SHIELD };
+            Cost = 55, ID = ItemName.BIG_SHIELD };
 
             // Initalizes the stats for the Big Stick.
             Item bigStick = new Item { Name = "Big Stick", StatBoost = 5, BoostType = ItemType.ATTACK,
             Cost = 2, ID = ItemName.BIG_STICK};
 
             // Initalizes the stats for the Fresh J's.
-            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 21, BoostType = ItemType.DEFENSE,
-            Cost = 23, ID = ItemName.FRESH_JS};
+            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 18, BoostType = ItemType.DEFENSE,
+            Cost = 34, ID = ItemName.FRESH_JS};
 
             // Initalizes the stats for the Wompus Gun.
             Item wompusGun = new Item { Name = "Wompus Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
@@ -150,16 +151,24 @@ namespace BattleArenaExtended
             Item protectionBand = new Item { Name = "Protection Band", StatBoost = 9, BoostType = ItemType.DEFENSE,
             Cost = 10, ID = ItemName.PROTECTION_BAND };
 
+            // Initalizes the stats for the Judgement Blade.
+            Item judgementBlade = new Item { Name = "Judgement Blade", StatBoost = 47, BoostType = ItemType.ATTACK,
+            Cost = 67, ID = ItemName.JUDGEMENT_BLADE };
+
+            // Initalizes the stats for the Aegis
+            Item aegis = new Item { Name = "Aegis", StatBoost = 26, BoostType = ItemType.DEFENSE, Cost = 64,
+            ID = ItemName.AEGIS };
+
             _offensiveInventory = new Item[] { thaeveBow, smallShield };
             _defensiveInventory = new Item[] { bigStick, protectionBand };
 
             // Initalizes the list of every item in the game.
             _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
-            smallShield, skellyPike, ironClub, wompusGun, protectionBand, freshJs};
+            smallShield, skellyPike, ironClub, wompusGun, protectionBand, freshJs, judgementBlade, aegis};
 
             // Initalizes the lists of the items the shop will use when called upon.
-            _itemList1 = new Item[] { bigWand, smallShield, healthPotion, skellyPike };
-            _itemList2 = new Item[] { bigStick, bigPotion, ironClub, protectionBand, thaeveBow };
+            _itemList1 = new Item[] { bigWand, smallShield, healthPotion, skellyPike, aegis };
+            _itemList2 = new Item[] { bigStick, bigPotion, ironClub, protectionBand, thaeveBow, judgementBlade };
             _itemList3 = new Item[] { wompusGun, protectionBand, bigPotion, freshJs, skellyPike };
             _itemList4 = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion };
             _itemList5 = new Item[] { bigShield, smallShield, protectionBand, bigPotion, wompusGun };
@@ -171,13 +180,13 @@ namespace BattleArenaExtended
         private void InitializeEnemies()
         {
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 26, 23, 22, 10);
+            Entity littleDude = new Entity("A Little Dude", 26, 23, 18, 10);
 
             // Initalizes the Stats for Thaeve.
-            Entity thaeve = new Entity("Thaeve", 24, 24, 21, 12);
+            Entity thaeve = new Entity("Thaeve", 24, 24, 15, 12);
 
             // Initalizes the Stats for Wimpus.
-            Entity wimpus = new Entity("Wimpus", 27, 26, 24, 14);
+            Entity wimpus = new Entity("Wimpus", 26, 26, 20, 14);
 
             // Initalizes the Stats for Durdle, the Great Turtle.
             Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 35, 29, 32, 33);
@@ -198,7 +207,7 @@ namespace BattleArenaExtended
             Entity skelly = new Entity("Skelly", 36, 31, 26, 24);
 
             // Initalizes the Stats for Remnant of the World Eater.
-            Entity remnant = new Entity("Remnant of the World Eater", 64, 43, 30, 53);
+            Entity remnant = new Entity("Remnant of the World Eater", 69, 45, 34, 53);
 
             // Initalizes the Stats for Spudette.
             Entity spudette = new Entity("Spudette", 42, 43, 32, 31);
@@ -210,94 +219,30 @@ namespace BattleArenaExtended
             Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32);
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 124, 55, 42, 0);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 96, 54, 43, 0);
 
-            // Initalizes the the list of enemies for the first level.
-            Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };
-
-            // Initalizes the list of enemies for the second level.
-            Entity[] levelTwo = new Entity[] { wompus, moneybag, bigDude, facelessHorror, skelly, remnant };
-
-            // Initalizes the list of enemies for the final level.
-            Entity[] levelThree = new Entity[] { wompusWithGun, bigOlDude, spudette, theFinalBoss };
-
-            int percentage = randomNumber.Next(101);
-
-            int randomEnemy = 0;
-
-            // Initalizes the list of enemies that will be fought per level.
+            // If the level is one...
             if (_currentLevel == 1)
             {
-                _enemies = levelOne;
+                // ...initalize the list for level one.
+                _enemies = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle }; ;
 
-                if(percentage >= 0 && percentage <= 25)
-                {
-                    randomEnemy = 0;
-                }
-                else if (percentage >= 26 && percentage <= 45)
-                {
-                    randomEnemy = 1;
-                }
-                else if (percentage >= 46 && percentage <= 73)
-                {
-                    randomEnemy = 2;
-                }
-                else
-                {
-                    randomEnemy = 3;
-                }
             }
-            else if(_currentLevel == 2)
+            // If the level is two...
+            else if (_currentLevel == 2)
             {
-                _enemies = levelTwo;
-
-                if (percentage >= 0 && percentage <= 25)
-                {
-                    randomEnemy = 0;
-                }
-                else if (percentage >= 26 && percentage <= 32)
-                {
-                    randomEnemy = 1;
-                }
-                else if (percentage >= 33 && percentage <= 48)
-                {
-                    randomEnemy = 2;
-                }
-                else if (percentage >= 49 && percentage <= 62)
-                {
-                    randomEnemy = 3;
-                }
-                else if (percentage >= 63 && percentage <= 74)
-                {
-                    randomEnemy = 4;
-                }
-                else
-                {
-                    randomEnemy = 5;
-                }
+                // ...initalize the list for level two.
+                _enemies = new Entity[] { wompus, moneybag, bigDude, facelessHorror, skelly, remnant };
 
             }
-            else if(_currentLevel == 3)
+            // If the level is three...
+            else if (_currentLevel == 3)
             {
-                _enemies = levelThree;
-
-                if (percentage >= 0 && percentage <= 25)
-                {
-                    randomEnemy = 0;
-                }
-                else if (percentage >= 26 && percentage <= 45)
-                {
-                    randomEnemy = 1;
-                }
-                else if (percentage >= 46 && percentage <= 73)
-                {
-                    randomEnemy = 2;
-                }
-                else
-                {
-                    randomEnemy = 3;
-                }
+                // ...initalize the list for level three.
+                _enemies = new Entity[] { wompusWithGun, bigOlDude, spudette, theFinalBoss };
             }
+
+            int randomEnemy = _randomNumber.Next(_enemies.Length);
 
             _currentEnemyIndex = randomEnemy;
 
@@ -317,8 +262,6 @@ namespace BattleArenaExtended
         /// </summary>
         private void End()
         {
-            Console.WriteLine("You defeated " + _battlesFought + " enemies");
-
             Console.WriteLine("Farewell " + _player.Name + "!");
         }
 
@@ -580,11 +523,11 @@ namespace BattleArenaExtended
             {
                 // ...be a more physical fighter.
                 case 0:
-                    _player = new Player(_playerName, 75, 22, 14, _offensiveInventory, "Offensive");
+                    _player = new Player(_playerName, 80, 22, 15, _offensiveInventory, "Offensive");
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 75, 16, 20, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 70, 20, 17, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -720,7 +663,6 @@ namespace BattleArenaExtended
             if (_currentEnemy.Health <= 0)
             {
                 Console.WriteLine("You defeated " + _currentEnemy.Name + "!");
-                _battlesFought++;
                 Console.ReadKey(true);
                 Console.Clear();
 
@@ -728,28 +670,45 @@ namespace BattleArenaExtended
                 _player.GetGold(_currentEnemy);
 
                 // If the player has not killed all the enemies, if they have not...
-                if (!(_currentEnemy.Name == "Durdle, the Great Turtle") && 
+                if (!(_currentEnemy.Name == "Durdle, the Great Turtle") &&
                     !(_currentEnemy.Name == "Remnant of the World Eater") &&
-                    !(_currentEnemy.Name == "Krazarackaradareda the World Eater"))
+                    !(_currentEnemy.Name == "Krazarackaradareda the World Eater") &&
+                    !(_currentEnemy.Name == "[REDACTED]") && _player.Health > 0)
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
                 }
                 // If the player has killed Durdle, the system will...
-                else if(_currentEnemy.Name == "Durdle, the Great Turtle")
+                else if(_currentEnemy.Name == "Durdle, the Great Turtle" || 
+                    _currentEnemy.Name == "Remnant of the World Eater")
                 {
                     // ...ask the player if they wish to enter the shop, then increment the current level.
                     EnterShop();
                     _currentLevel++;
                 }
-                // If the player has killed the Remnant, the system will...
-                else if (_currentEnemy.Name == "Remnant of the World Eater")
+                else if (_currentEnemy.Name == "Krazarackaradareda the World Eater")
                 {
-                    // ...ask the player if they wish to enter the shop, then increment the current level.
-                    EnterShop();
-                    _currentLevel++;
+                    Console.WriteLine("But you didn't think that was it, did you?");
+                    Console.ReadKey(true);
+                    Console.Clear();
+
+                    Console.WriteLine("Thought you'd beat the monster, save the day?");
+                    Console.ReadKey(true);
+                    Console.Clear();
+
+                    Console.WriteLine(_player.Name + ", you thought wrong.");
+                    Console.ReadKey(true);
+                    Console.Clear();
+
+                    Console.WriteLine("The infection spreads.");
+                    Console.ReadKey(true);
+                    Console.Clear();
+
+                    // Initalizes the Stats for [REDACTED].
+                    _currentEnemy = new Entity("[REDACTED]", 123, 64, 40, 0);
+                    return;
                 }
-                // Check to see if the player has defeated every enemy.
+                // Check to see if the player has defeated [REDACTED].
                 else
                 {
                     _currentScene = Scene.RESTART_MENU;
@@ -788,7 +747,7 @@ namespace BattleArenaExtended
             {
                 case 0:
                     Console.WriteLine("You enter the shop.");
-                    int randomShop = randomNumber.Next(5);
+                    int randomShop = _randomNumber.Next(5);
 
                     switch (randomShop)
                     {

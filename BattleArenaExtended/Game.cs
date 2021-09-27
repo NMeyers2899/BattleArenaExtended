@@ -148,6 +148,9 @@ namespace BattleArenaExtended
             // Initalizes the Stats for Wompus.
             Entity wompus = new Entity("Wompus", 33, 22, 15, 25);
 
+            // Initalizes the Stats for Moneybag.
+            Entity moneybag = new Entity("Moneybag", 15, 34, 22, 43);
+
             // Initalizes the Stats for Big Dude.
             Entity bigDude = new Entity("A Big Dude", 31, 25, 18, 20);
 
@@ -173,7 +176,7 @@ namespace BattleArenaExtended
             Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };
 
             // Initalizes the list of enemies for the second level.
-            Entity[] levelTwo = new Entity[] { wompus, bigDude, facelessHorror, skelly, remnant };
+            Entity[] levelTwo = new Entity[] { wompus, moneybag, bigDude, facelessHorror, skelly, remnant };
 
             // Initalizes the list of enemies for the final level.
             Entity[] levelThree = new Entity[] { wompusWithGun, spudette, theFinalBoss };

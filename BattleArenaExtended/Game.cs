@@ -37,6 +37,7 @@ namespace BattleArenaExtended
         BIG_POTION,
         SMALL_SHIELD,
         THAEVE_BOW,
+        PROTECTION_BAND,
         COUNT
     }
 
@@ -144,14 +145,18 @@ namespace BattleArenaExtended
             Item thaeveBow = new Item { Name = "Thaeve Bow", StatBoost = 11, BoostType = ItemType.ATTACK,
             Cost = 12, ID = ItemName.THAEVE_BOW };
 
-            _offensiveInventory = new Item[] { bigStick, smallShield };
-            _defensiveInventory = new Item[] { smallShield, healthPotion };
+            // Initalizes the stats for the Protection Band.
+            Item protectionBand = new Item { Name = "Protection Band", StatBoost = 9, BoostType = ItemType.DEFENSE,
+            Cost = 10, ID = ItemName.PROTECTION_BAND };
+
+            _offensiveInventory = new Item[] { bigStick };
+            _defensiveInventory = new Item[] { smallShield };
 
             _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
             smallShield, skellyPike, ironClub, wompusGun};
             _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
-            _itemList2 = new Item[] { bigStick, bigPotion, ironClub, thaeveBow };
-            _itemList3 = new Item[] { wompusGun, bigPotion, freshJs, skellyPike };
+            _itemList2 = new Item[] { bigStick, bigPotion, ironClub, protectionBand, thaeveBow };
+            _itemList3 = new Item[] { wompusGun, protectionBand, bigPotion, freshJs, skellyPike };
             _itemList4 = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion };
         }
 

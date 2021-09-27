@@ -32,6 +32,9 @@ namespace BattleArenaExtended
         FRESH_JS,
         WOMPUS_GUN,
         HEALTH_POTION,
+        SKELLY_PIKE,
+        IRON_CLUB,
+        BIG_POTION,
         COUNT
     }
 
@@ -57,8 +60,12 @@ namespace BattleArenaExtended
         private Item[] _offensiveInventory;
         private Item[] _defensiveInventory;
         private Item[] _itemList;
+        private Item[] _itemList1;
+        private Item[] _itemList2;
+        private Item[] _itemList3;
         private Random randomNumber = new Random();
         private int _battlesFought = 0;
+        private int _currentLevel = 1;
 
         /// <summary>
         /// Function that starts the main game loop.
@@ -86,34 +93,36 @@ namespace BattleArenaExtended
         }
 
         /// <summary>
-        /// Initalizes the items for the different classes.
+        /// Initalizes the items for the game.
         /// </summary>
         public void InitializeItems()
         {
-            // Defensive Items
             Item bigWand = new Item { Name = "Big Wand", StatBoost = 14, BoostType = ItemType.ATTACK, 
             Cost = 14, ID = ItemName.BIG_WAND };
             Item bigShield = new Item { Name = "Big Shield", StatBoost = 25, BoostType = ItemType.DEFENSE,
             Cost = 28, ID = ItemName.BIG_SHIELD };
-
-            // Offensive Items
             Item bigStick = new Item { Name = "Big Stick", StatBoost = 5, BoostType = ItemType.ATTACK,
             Cost = 2, ID = ItemName.BIG_STICK};
             Item freshJs = new Item { Name = "Fresh J's", StatBoost = 23, BoostType = ItemType.DEFENSE,
             Cost = 23, ID = ItemName.FRESH_JS};
-
-            // Other Items
             Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
             Cost = 44, ID = ItemName.WOMPUS_GUN };
             Item healthPotion = new Item { Name = "Health Potion", StatBoost = 20, BoostType = ItemType.HEALTH,
             Cost = 15, ID = ItemName.HEALTH_POTION };
+            Item skellyPike = new Item { Name = "Skelly Pike", StatBoost = 34, BoostType = ItemType.ATTACK,
+            Cost = 49, ID = ItemName.SKELLY_PIKE };
+            Item ironClub = new Item { Name = "Iron Club", StatBoost = 18, BoostType = ItemType.ATTACK,
+            Cost = 17, ID = ItemName.IRON_CLUB };
+            Item bigPotion = new Item { Name = "Big Potion", StatBoost = 45, BoostType = ItemType.HEALTH,
+            Cost = 35, ID = ItemName.BIG_POTION };
 
-            _defensiveInventory = new Item[] { bigWand, bigShield };
-            _offensiveInventory = new Item[] { bigStick, freshJs };
+            _offensiveInventory = new Item[] { ironClub };
+            _defensiveInventory = new Item[] { bigShield, healthPotion };
 
-            _itemList = new Item[] { bigWand, bigShield, bigStick, freshJs, wompusGun, healthPotion };
-
-            _shop = new Shop(_itemList);
+            _itemList = new Item[] { bigStick, bigWand, bigShield, ironClub, healthPotion };
+            _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
+            _itemList2 = new Item[] { bigStick, healthPotion, ironClub };
+            _itemList3 = new Item[] { wompusGun, freshJs, skellyPike };
         }
 
         /// <summary>
@@ -131,28 +140,54 @@ namespace BattleArenaExtended
             Entity wimpus = new Entity("Wimpus", 21, 13, 18, 14);
 
             // Initalizes the Stats for Durdle, the Great Turtle.
-            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 20, 26, 35, 33);
+            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 25, 26, 30, 33);
 
             // Initalizes the Stats for Wompus.
-            Entity wompus = new Entity("Wompus", 37, 22, 15, 25);
+            Entity wompus = new Entity("Wompus", 33, 22, 15, 25);
 
             // Initalizes the Stats for Big Dude.
-            Entity bigDude = new Entity("A Big Dude", 33, 25, 18, 20);
+            Entity bigDude = new Entity("A Big Dude", 31, 25, 18, 20);
 
-            // Initalizes the Stats for Copycat.
-            Entity copyCat = new Entity("Copycat", 1, 1, 1, 1);
+            // Initalizes the Stats for Faceless Horror.
+            Entity facelessHorror = new Entity("Faceless Horror", 26, 29, 18, 22);
+
+            // Initalizes the Stats for Skelly
+            Entity skelly = new Entity("Skelly", 30, 24, 22, 24);
+
+            // Initalizes the Stats for Remnant of the World Eater.
+            Entity remnant = new Entity("Remnant of the World Eater", 64, 32, 23, 53);
+
+            // Initalizes the Stats for Spudette.
+            Entity spudette = new Entity("Spudette", 42, 34, 36, 31);
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 32, 16, 32);
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 32, 22, 34);
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 50, 35, 20, 0);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 100, 34, 26, 0);
 
             // Initalizes the the list of enemies for the first level.
             Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };
 
-            // Initalizes the list of _enemies that will be fought in this order.
-            _enemies = levelOne;
+            // Initalizes the list of enemies for the second level.
+            Entity[] levelTwo = new Entity[] { wompus, bigDude, facelessHorror, skelly, remnant };
+
+            // Initalizes the list of enemies for the final level.
+            Entity[] levelThree = new Entity[] { wompusWithGun, spudette, theFinalBoss };
+
+            // Initalizes the list of enemies that will be fought per level.
+            if (_currentLevel == 1)
+            {
+                _enemies = levelOne;
+            }
+            else if(_currentLevel == 2)
+            {
+                _enemies = levelTwo;
+            }
+            else if(_currentLevel == 3)
+            {
+                _enemies = levelThree;
+            }
 
             int randomEnemy = randomNumber.Next(0, _enemies.Length);
 
@@ -230,7 +265,7 @@ namespace BattleArenaExtended
             _currentEnemy = new Entity();
 
             // Tries to load the current enemy, if it can't...
-            if (!_currentEnemy.Load(reader, _itemList))
+            if (!_currentEnemy.Load(reader, _itemList1))
             {
                 // ...it returns false.
                 return false;
@@ -373,7 +408,7 @@ namespace BattleArenaExtended
         /// </summary>
         public void DisplayStartMenu()
         {
-            int choice = GetInput("Welcome to the Battle Arena!", "Start New Game", "Load Game");
+            int choice = GetInput("Welcome to your Odd Adventure!", "Start New Game", "Load Game");
 
             switch (choice)
             {
@@ -437,11 +472,11 @@ namespace BattleArenaExtended
             {
                 // ...be a more physical fighter.
                 case 0:
-                    _player = new Player(_playerName, 100, 35, 10, _offensiveInventory, "Offensive");
+                    _player = new Player(_playerName, 75, 20, 15, _offensiveInventory, "Offensive");
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 75, 20, 15, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 75, 15, 20, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -498,7 +533,9 @@ namespace BattleArenaExtended
         {
             int choice = 0;
 
-            if (_currentEnemy.Name == "Durdle, the Great Turtle")
+            if (_currentEnemy.Name == "Durdle, the Great Turtle" || 
+                _currentEnemy.Name == "Remnant of the World Eater" ||
+                _currentEnemy.Name == "Krazarackaradareda, the World Eater")
             {
                 choice = GetInput("You feel a great presence just ahead. Do you-", "Continue Ahead", "Turn Back");
 
@@ -591,10 +628,26 @@ namespace BattleArenaExtended
                 _player.GetGold(_currentEnemy);
 
                 // If the player has not killed all the enemies, if they have not...
-                if (!(_currentEnemy.Name == "Durdle, the Great Turtle"))
+                if (!(_currentEnemy.Name == "Durdle, the Great Turtle") && 
+                    !(_currentEnemy.Name == "Remnant of the World Eater") &&
+                    !(_currentEnemy.Name == "Krazarackaradareda, the World Eater"))
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
+                }
+                // If the player has killed Durdle, the system will...
+                else if(_currentEnemy.Name == "Durdle, the Great Turtle")
+                {
+                    // ...ask the player if they wish to enter the shop, then increment the current level.
+                    EnterShop();
+                    _currentLevel++;
+                }
+                // If the player has killed the Remnant, the system will...
+                else if (_currentEnemy.Name == "Remnant of the World Eater")
+                {
+                    // ...ask the player if they wish to enter the shop, then increment the current level.
+                    EnterShop();
+                    _currentLevel++;
                 }
                 // Check to see if the player has defeated every enemy.
                 else
@@ -635,6 +688,20 @@ namespace BattleArenaExtended
             {
                 case 0:
                     Console.WriteLine("You enter the shop.");
+                    int randomShop = randomNumber.Next(0, 2);
+
+                    switch (randomShop)
+                    {
+                        case 0:
+                            _shop = new Shop(_itemList1);
+                            break;
+                        case 1:
+                            _shop = new Shop(_itemList2);
+                            break;
+                        case 2:
+                            _shop = new Shop(_itemList3);
+                            break;
+                    }
                     _currentScene = Scene.SHOP_MENU;
                     break;
                 case 1:

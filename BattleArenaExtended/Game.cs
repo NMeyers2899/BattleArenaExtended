@@ -116,10 +116,10 @@ namespace BattleArenaExtended
             Cost = 17, ID = ItemName.IRON_CLUB };
             Item bigPotion = new Item { Name = "Big Potion", StatBoost = 45, BoostType = ItemType.HEALTH,
             Cost = 35, ID = ItemName.BIG_POTION };
-            Item smallShield = new Item { Name = "Small Shield", StatBoost = 16, BoostType = ItemType.DEFENSE,
-            Cost = 12, ID = ItemName.SMALL_SHIELD };
+            Item smallShield = new Item { Name = "Small Shield", StatBoost = 5, BoostType = ItemType.DEFENSE,
+            Cost = 7, ID = ItemName.SMALL_SHIELD };
 
-            _offensiveInventory = new Item[] { ironClub };
+            _offensiveInventory = new Item[] { bigStick };
             _defensiveInventory = new Item[] { smallShield, healthPotion };
 
             _itemList = new Item[] { bigStick, bigWand, bigShield, ironClub, healthPotion };
@@ -543,11 +543,11 @@ namespace BattleArenaExtended
             {
                 // ...be a more physical fighter.
                 case 0:
-                    _player = new Player(_playerName, 75, 20, 15, _offensiveInventory, "Offensive");
+                    _player = new Player(_playerName, 75, 22, 14, _offensiveInventory, "Offensive");
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 75, 15, 20, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 75, 17, 21, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -572,7 +572,7 @@ namespace BattleArenaExtended
         public void DisplayEquipItemMenu()
         {
             // Get the item index.
-            int choice = GetInput("Select an item to equip.", _player.GetItemNames());
+            int choice = GetInput("Select an item to equip or use.", _player.GetItemNames());
 
             Item previousItem = _player.CurrentItem;
 
@@ -643,7 +643,7 @@ namespace BattleArenaExtended
             Console.WriteLine("");
 
             int choice = GetInput(_currentEnemy.Name + " stands before you! What will you do?",
-                "Attack!", "Equip Item.", "Remove Current Item.", "Save.");
+                "Attack!", "Equip/Use Item.", "Remove Current Item.", "Save.");
             // Finds out if the _player wishes to...
             switch (choice)
             {

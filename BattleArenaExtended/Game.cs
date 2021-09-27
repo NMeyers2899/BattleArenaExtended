@@ -144,7 +144,7 @@ namespace BattleArenaExtended
             Item thaeveBow = new Item { Name = "Thaeve Bow", StatBoost = 11, BoostType = ItemType.ATTACK,
             Cost = 12, ID = ItemName.THAEVE_BOW };
 
-            _offensiveInventory = new Item[] { bigStick };
+            _offensiveInventory = new Item[] { bigStick, smallShield };
             _defensiveInventory = new Item[] { smallShield, healthPotion };
 
             _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
@@ -170,7 +170,7 @@ namespace BattleArenaExtended
             Entity wimpus = new Entity("Wimpus", 21, 19, 15, 14);
 
             // Initalizes the Stats for Durdle, the Great Turtle.
-            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 25, 26, 30, 33);
+            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 24, 26, 30, 33);
 
             // Initalizes the Stats for Wompus.
             Entity wompus = new Entity("Wompus", 33, 22, 15, 25);
@@ -601,16 +601,8 @@ namespace BattleArenaExtended
             // Get the item index.
             int choice = GetInput("Select an item to equip or use.", _player.GetItemNames());
 
-            Item previousItem = _player.CurrentItem;
-
             // Equip the item of the given index.
             _player.TryEquipItem(choice);
-
-            // Checks to see if the player equipped an item they had before.
-            if(_player.CurrentItem.ID == previousItem.ID)
-            {
-                return;
-            }
 
             // If the item that was equipped is an attack or defense type...
             if(_player.CurrentItem.BoostType == ItemType.ATTACK || 

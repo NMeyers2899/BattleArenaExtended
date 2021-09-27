@@ -8,6 +8,7 @@ namespace BattleArenaExtended
     class Player : Entity
     {
         private Item[] _inventory;
+        private Item[] _equippedItems;
         private Item _currentItem;
         private int _currentItemIndex;
         private string _job;
@@ -18,13 +19,27 @@ namespace BattleArenaExtended
             get { return _currentItem; }
         }
 
+        public override float Health
+        {
+            get
+            {
+                if(_health > 200)
+                {
+                    _health = 200;
+                    return _health;
+                }
+
+                return _health;
+            }
+        }
+
         public override float AttackPower
         {
             get
             {
-                if (_currentItem.BoostType == ItemType.ATTACK)
+                if (_equippedItems[0].Name != "Nothing")
                 {
-                    return base.AttackPower + _currentItem.StatBoost;
+                    return base.AttackPower + _equippedItems[0].StatBoost;
                 }
 
                 return base.AttackPower;
@@ -35,9 +50,9 @@ namespace BattleArenaExtended
         {
             get
             {
-                if (_currentItem.BoostType == ItemType.DEFENSE)
+                if (_equippedItems[1].Name != "Nothing")
                 {
-                    return base.DefensePower + _currentItem.StatBoost;
+                    return base.DefensePower + _equippedItems[1].StatBoost;
                 }
 
                 return base.DefensePower;
@@ -66,6 +81,7 @@ namespace BattleArenaExtended
             _inventory = new Item[0];
             _currentItem.Name = "Nothing";
             _currentItemIndex = -1;
+            _equippedItems = new Item[2];
         }
 
         public Player(Item[] items) : base()
@@ -73,6 +89,7 @@ namespace BattleArenaExtended
             _currentItem.Name = "Nothing";
             _inventory = items;
             _currentItemIndex = -1;
+            _equippedItems = new Item[2];
         }
 
         public Player(string name, float health, float attackPower, float defensePower, Item[] items, string job,
@@ -82,6 +99,7 @@ namespace BattleArenaExtended
             _currentItem.Name = "Nothing";
             _job = job;
             _currentItemIndex = -1;
+            _equippedItems = new Item[2];
         }
 
         /// <summary>
@@ -91,8 +109,6 @@ namespace BattleArenaExtended
         /// <returns> If the user can equip the item or not. </returns>
         public bool TryEquipItem(int index)
         { 
-            int previousIndex = _currentItemIndex;
-
             // Checks to see if the index is out of bounds of our _items array. If it is...
             if (index >= _inventory.Length || index < 0)
             {
@@ -107,8 +123,20 @@ namespace BattleArenaExtended
             // Sets the current item to the item at the index.
             _currentItem = _inventory[_currentItemIndex];
 
+            // If the item boosts attack...
+            if(_currentItem.BoostType == ItemType.ATTACK)
+            {
+                // ...it is set to the first index of equipped items.
+                _equippedItems[0] = _currentItem;
+            }
+            // If the item boosts defense...
+            else if(_currentItem.BoostType == ItemType.DEFENSE)
+            {
+                // ...it is set to the second index of equipped items.
+                _equippedItems[1] = _currentItem;
+            }
             // If the item boosts health...
-            if (_currentItem.BoostType == ItemType.HEALTH)
+            else
             {
                 // ...add the stat boost of the item to the player's health...
                 _health += _inventory[_currentItemIndex].StatBoost;
@@ -123,9 +151,9 @@ namespace BattleArenaExtended
                 bool itemRemoved = false;
 
                 // ...and remove the item from the inventory.
-                for(int i = 0; i < _inventory.Length; i++)
+                for (int i = 0; i < _inventory.Length; i++)
                 {
-                    if(_inventory[i].ID != _currentItem.ID || itemRemoved)
+                    if (_inventory[i].ID != _currentItem.ID || itemRemoved)
                     {
                         newInventory[j] = _inventory[i];
                         j++;
@@ -138,39 +166,19 @@ namespace BattleArenaExtended
 
                 // Sets the old inventory equal to the new one.
                 _inventory = newInventory;
-
-                // Checks to see if there was no item previously equipped.
-                if (previousIndex == -1)
-                {
-                    return true;
-                }
-                // Checks to see if the previous index was the last item in the old array. If it is...
-                else if (previousIndex >= _inventory.Length)
-                {
-                    // ...subtract from the previous index until it matches.
-                    while(previousIndex >= _inventory.Length)
-                    {
-                        previousIndex--;
-                    }
-                }
-
-                // Sets the current item 
-                _currentItem = _inventory[previousIndex];
-
-                return true;
             }
 
             return true;
         }
 
         /// <summary>
-        /// Sets the current item to nothing.
+        /// Sets the current items to nothing.
         /// </summary>
         /// <returns> Whether or not the player already had an item equipped. </returns>
         public bool TryUnequipItem()
         {
             // Checks to see if anything is equipped. If it is...
-            if (_currentItem.Name == "Nothing")
+            if (_equippedItems[0].Name == "Nothing" && _equippedItems[1].Name == "Nothing")
             {
                 // ...it returns false.
                 return false;
@@ -178,9 +186,11 @@ namespace BattleArenaExtended
 
             _currentItemIndex = -1;
 
-            // Sets the item to nothing.
-            _currentItem = new Item();
-            _currentItem.Name = "Nothing";
+            // Sets the items to nothing.
+            _equippedItems[0] = new Item();
+            _equippedItems[0].Name = "Nothing";
+            _equippedItems[1] = new Item();
+            _equippedItems[1].Name = "Nothing";
 
             return true;
         }

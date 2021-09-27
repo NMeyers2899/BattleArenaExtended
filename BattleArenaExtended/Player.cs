@@ -90,7 +90,7 @@ namespace BattleArenaExtended
         /// <param name="index"> The index which refers to an item. </param>
         /// <returns> If the user can equip the item or not. </returns>
         public bool TryEquipItem(int index)
-        {
+        { 
             int previousIndex = _currentItemIndex;
 
             // Checks to see if the index is out of bounds of our _items array. If it is...
@@ -147,8 +147,11 @@ namespace BattleArenaExtended
                 // Checks to see if the previous index was the last item in the old array. If it is...
                 else if (previousIndex >= _inventory.Length)
                 {
-                    // ...subtract one from the previous index.
-                    previousIndex--;
+                    // ...subtract from the previous index until it matches.
+                    while(previousIndex >= _inventory.Length)
+                    {
+                        previousIndex--;
+                    }
                 }
 
                 // Sets the current item 

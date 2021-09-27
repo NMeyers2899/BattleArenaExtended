@@ -20,7 +20,8 @@ namespace BattleArenaExtended
         CHARACTER_SELECTION,
         BATTLE,
         SHOP_MENU,
-        RESTART_MENU
+        RESTART_MENU,
+        BATTLE_PREP
     }
 
     public enum ItemName
@@ -90,20 +91,20 @@ namespace BattleArenaExtended
         public void InitializeItems()
         {
             // Defensive Items
-            Item bigWand = new Item { Name = "Big Wand", StatBoost = 20, BoostType = ItemType.ATTACK, 
-            Cost = 25, ID = ItemName.BIG_WAND };
+            Item bigWand = new Item { Name = "Big Wand", StatBoost = 14, BoostType = ItemType.ATTACK, 
+            Cost = 14, ID = ItemName.BIG_WAND };
             Item bigShield = new Item { Name = "Big Shield", StatBoost = 25, BoostType = ItemType.DEFENSE,
-            Cost = 22, ID = ItemName.BIG_SHIELD };
+            Cost = 28, ID = ItemName.BIG_SHIELD };
 
             // Offensive Items
-            Item bigStick = new Item { Name = "Big Stick", StatBoost = 20, BoostType = ItemType.ATTACK,
+            Item bigStick = new Item { Name = "Big Stick", StatBoost = 5, BoostType = ItemType.ATTACK,
             Cost = 2, ID = ItemName.BIG_STICK};
-            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 10, BoostType = ItemType.DEFENSE,
-            Cost = 52, ID = ItemName.FRESH_JS};
+            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 23, BoostType = ItemType.DEFENSE,
+            Cost = 23, ID = ItemName.FRESH_JS};
 
             // Other Items
-            Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 30, BoostType = ItemType.ATTACK,
-            Cost = 35, ID = ItemName.WOMPUS_GUN };
+            Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
+            Cost = 44, ID = ItemName.WOMPUS_GUN };
             Item healthPotion = new Item { Name = "Health Potion", StatBoost = 20, BoostType = ItemType.HEALTH,
             Cost = 15, ID = ItemName.HEALTH_POTION };
 
@@ -121,28 +122,43 @@ namespace BattleArenaExtended
         private void InitializeEnemies()
         {
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 30, 20, 15, 15);
+            Entity littleDude = new Entity("A Little Dude", 22, 18, 12, 10);
+
+            // Initalizes the Stats for Thaeve.
+            Entity thaeve = new Entity("Thaeve", 20, 12, 14, 12);
+
+            // Initalizes the Stats for Wimpus.
+            Entity wimpus = new Entity("Wimpus", 21, 13, 18, 14);
+
+            // Initalizes the Stats for Durdle, the Great Turtle.
+            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 20, 26, 35, 33);
+
+            // Initalizes the Stats for Wompus.
+            Entity wompus = new Entity("Wompus", 37, 22, 15, 25);
 
             // Initalizes the Stats for Big Dude.
-            Entity bigDude = new Entity("A Big Dude", 35, 25, 20, 20);
+            Entity bigDude = new Entity("A Big Dude", 33, 25, 18, 20);
+
+            // Initalizes the Stats for Copycat.
+            Entity copyCat = new Entity("Copycat", 1, 1, 1, 1);
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 40, 30, 20, 30);
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 32, 16, 32);
 
             // Initalizes the Stats for The Final Boss.
             Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 50, 35, 20, 0);
 
+            // Initalizes the the list of enemies for the first level.
+            Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };
+
             // Initalizes the list of _enemies that will be fought in this order.
-            _enemies = new Entity[] { littleDude, bigDude, wompusWithGun, theFinalBoss };
+            _enemies = levelOne;
 
             int randomEnemy = randomNumber.Next(0, _enemies.Length);
 
             _currentEnemyIndex = randomEnemy;
 
             _currentEnemy = _enemies[_currentEnemyIndex];
-
-
-
         }
 
         /// <summary>
@@ -311,7 +327,11 @@ namespace BattleArenaExtended
                 case Scene.CHARACTER_SELECTION:
                     CharacterSelection();
                     break;
-                // ...fighting _enemies.
+                // ...preparing to fight an enemy.
+                case Scene.BATTLE_PREP:
+                    BattlePrep();
+                    break;
+                // ...fighting enemies.
                 case Scene.BATTLE:
                     Battle();
                     break;
@@ -394,7 +414,7 @@ namespace BattleArenaExtended
             switch (choice)
             {
                 case 0:
-                    _currentScene++;
+                    _currentScene = Scene.CHARACTER_SELECTION;
                     break;
                 case 1:
                     break;
@@ -425,7 +445,7 @@ namespace BattleArenaExtended
                     break;
             }
 
-            _currentScene++;
+            _currentScene = Scene.BATTLE_PREP;
         }
 
         /// <summary>
@@ -468,6 +488,37 @@ namespace BattleArenaExtended
                 Console.ReadKey(true);
                 Console.Clear();
             }
+        }
+
+        /// <summary>
+        /// If the enemy is a boss, we check to see if the player wishes to continue.
+        /// </summary>
+        /// <returns> If the boss is fought or not, if it is even encountered. </returns>
+        public void BattlePrep()
+        {
+            int choice = 0;
+
+            if (_currentEnemy.Name == "Durdle, the Great Turtle")
+            {
+                choice = GetInput("You feel a great presence just ahead. Do you-", "Continue Ahead", "Turn Back");
+
+                switch (choice)
+                {
+                    case 0:
+                        Console.WriteLine("You continue on ahead.");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        break;
+                    case 1:
+                        InitializeEnemies();
+                        Console.WriteLine("You turn back, to return another day.");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        break;
+                }
+            }
+
+            _currentScene = Scene.BATTLE;
         }
 
         /// <summary>
@@ -540,7 +591,7 @@ namespace BattleArenaExtended
                 _player.GetGold(_currentEnemy);
 
                 // If the player has not killed all the enemies, if they have not...
-                if (!(_currentEnemy.Name == "Krazarackaradareda the World Eater"))
+                if (!(_currentEnemy.Name == "Durdle, the Great Turtle"))
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
@@ -556,8 +607,6 @@ namespace BattleArenaExtended
                 }
 
                 InitializeEnemies();
-
-                _currentEnemy = _enemies[_currentEnemyIndex];
                 Console.ReadKey(true);
                 Console.Clear();
             }
@@ -590,6 +639,7 @@ namespace BattleArenaExtended
                     break;
                 case 1:
                     Console.WriteLine("You move on to your next battle.");
+                    _currentScene = Scene.BATTLE_PREP;
                     break;
             }
         }
@@ -648,7 +698,7 @@ namespace BattleArenaExtended
                 Console.WriteLine("Do come again, friend!");
                 Console.ReadKey(true);
                 Console.Clear();
-                _currentScene = Scene.BATTLE;
+                _currentScene = Scene.BATTLE_PREP;
             }
             else if (!_shop.Sell(_player, choice))
             {

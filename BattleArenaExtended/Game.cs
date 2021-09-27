@@ -36,6 +36,7 @@ namespace BattleArenaExtended
         IRON_CLUB,
         BIG_POTION,
         SMALL_SHIELD,
+        THAEVE_BOW,
         COUNT
     }
 
@@ -64,6 +65,7 @@ namespace BattleArenaExtended
         private Item[] _itemList1;
         private Item[] _itemList2;
         private Item[] _itemList3;
+        private Item[] _itemList4;
         private Random randomNumber = new Random();
         private int _battlesFought = 0;
         private int _currentLevel = 1;
@@ -98,34 +100,59 @@ namespace BattleArenaExtended
         /// </summary>
         public void InitializeItems()
         {
+            // Initalizes the stats for the Big Wand.
             Item bigWand = new Item { Name = "Big Wand", StatBoost = 14, BoostType = ItemType.ATTACK, 
             Cost = 14, ID = ItemName.BIG_WAND };
+
+            // Initalizes the stats for the Big Shield.
             Item bigShield = new Item { Name = "Big Shield", StatBoost = 22, BoostType = ItemType.DEFENSE,
             Cost = 28, ID = ItemName.BIG_SHIELD };
+
+            // Initalizes the stats for the Big Stick.
             Item bigStick = new Item { Name = "Big Stick", StatBoost = 5, BoostType = ItemType.ATTACK,
             Cost = 2, ID = ItemName.BIG_STICK};
+
+            // Initalizes the stats for the Fresh J's.
             Item freshJs = new Item { Name = "Fresh J's", StatBoost = 21, BoostType = ItemType.DEFENSE,
             Cost = 23, ID = ItemName.FRESH_JS};
-            Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
+
+            // Initalizes the stats for the Wompus Gun.
+            Item wompusGun = new Item { Name = "Wompus Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
             Cost = 44, ID = ItemName.WOMPUS_GUN };
+
+            // Initalizes the stats for the Health Potion.
             Item healthPotion = new Item { Name = "Health Potion", StatBoost = 20, BoostType = ItemType.HEALTH,
             Cost = 15, ID = ItemName.HEALTH_POTION };
+
+            // Initalizes the stats for the Skelly Pike.
             Item skellyPike = new Item { Name = "Skelly Pike", StatBoost = 34, BoostType = ItemType.ATTACK,
             Cost = 49, ID = ItemName.SKELLY_PIKE };
+
+            // Initalizes the stats for the Iron Club.
             Item ironClub = new Item { Name = "Iron Club", StatBoost = 18, BoostType = ItemType.ATTACK,
             Cost = 17, ID = ItemName.IRON_CLUB };
+
+            // Initalizes the stats for the Big Potion.
             Item bigPotion = new Item { Name = "Big Potion", StatBoost = 45, BoostType = ItemType.HEALTH,
             Cost = 35, ID = ItemName.BIG_POTION };
+
+            // Initalizes the stats for the Small Shield.
             Item smallShield = new Item { Name = "Small Shield", StatBoost = 5, BoostType = ItemType.DEFENSE,
             Cost = 7, ID = ItemName.SMALL_SHIELD };
+
+            // Initalizes the stats for the Thaeve Bow.
+            Item thaeveBow = new Item { Name = "Thaeve Bow", StatBoost = 11, BoostType = ItemType.ATTACK,
+            Cost = 12, ID = ItemName.THAEVE_BOW };
 
             _offensiveInventory = new Item[] { bigStick };
             _defensiveInventory = new Item[] { smallShield, healthPotion };
 
-            _itemList = new Item[] { bigStick, bigWand, bigShield, ironClub, healthPotion };
+            _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
+            smallShield, skellyPike, ironClub, wompusGun};
             _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
-            _itemList2 = new Item[] { bigStick, bigPotion, ironClub };
-            _itemList3 = new Item[] { wompusGun, freshJs, skellyPike };
+            _itemList2 = new Item[] { bigStick, bigPotion, ironClub, thaeveBow };
+            _itemList3 = new Item[] { wompusGun, bigPotion, freshJs, skellyPike };
+            _itemList4 = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion };
         }
 
         /// <summary>
@@ -140,7 +167,7 @@ namespace BattleArenaExtended
             Entity thaeve = new Entity("Thaeve", 20, 12, 14, 12);
 
             // Initalizes the Stats for Wimpus.
-            Entity wimpus = new Entity("Wimpus", 21, 13, 18, 14);
+            Entity wimpus = new Entity("Wimpus", 21, 19, 15, 14);
 
             // Initalizes the Stats for Durdle, the Great Turtle.
             Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 25, 26, 30, 33);
@@ -773,7 +800,7 @@ namespace BattleArenaExtended
                             _shop = new Shop(_itemList3);
                             break;
                         case 3:
-                            _shop = new Shop(_itemList);
+                            _shop = new Shop(_itemList4);
                             break;
                     }
                     _currentScene = Scene.SHOP_MENU;

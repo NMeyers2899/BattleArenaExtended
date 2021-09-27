@@ -198,7 +198,7 @@ namespace BattleArenaExtended
             Entity skelly = new Entity("Skelly", 36, 31, 26, 24);
 
             // Initalizes the Stats for Remnant of the World Eater.
-            Entity remnant = new Entity("Remnant of the World Eater", 64, 32, 23, 53);
+            Entity remnant = new Entity("Remnant of the World Eater", 64, 43, 30, 53);
 
             // Initalizes the Stats for Spudette.
             Entity spudette = new Entity("Spudette", 42, 43, 32, 31);
@@ -210,7 +210,7 @@ namespace BattleArenaExtended
             Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32);
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 100, 47, 38, 0);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 124, 55, 42, 0);
 
             // Initalizes the the list of enemies for the first level.
             Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };

@@ -23,9 +23,9 @@ namespace BattleArenaExtended
         {
             get
             {
-                if(_health > 200)
+                if(_health > 100)
                 {
-                    _health = 200;
+                    _health = 100;
                     return _health;
                 }
 

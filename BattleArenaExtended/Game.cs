@@ -67,6 +67,7 @@ namespace BattleArenaExtended
         private Item[] _itemList2;
         private Item[] _itemList3;
         private Item[] _itemList4;
+        private Item[] _itemList5;
         private Random randomNumber = new Random();
         private int _battlesFought = 0;
         private int _currentLevel = 1;
@@ -130,7 +131,7 @@ namespace BattleArenaExtended
             Cost = 49, ID = ItemName.SKELLY_PIKE };
 
             // Initalizes the stats for the Iron Club.
-            Item ironClub = new Item { Name = "Iron Club", StatBoost = 18, BoostType = ItemType.ATTACK,
+            Item ironClub = new Item { Name = "Iron Club", StatBoost = 16, BoostType = ItemType.ATTACK,
             Cost = 17, ID = ItemName.IRON_CLUB };
 
             // Initalizes the stats for the Big Potion.
@@ -149,15 +150,19 @@ namespace BattleArenaExtended
             Item protectionBand = new Item { Name = "Protection Band", StatBoost = 9, BoostType = ItemType.DEFENSE,
             Cost = 10, ID = ItemName.PROTECTION_BAND };
 
-            _offensiveInventory = new Item[] { bigStick };
-            _defensiveInventory = new Item[] { smallShield };
+            _offensiveInventory = new Item[] { thaeveBow, smallShield };
+            _defensiveInventory = new Item[] { bigStick, protectionBand };
 
+            // Initalizes the list of every item in the game.
             _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
-            smallShield, skellyPike, ironClub, wompusGun, protectionBand};
-            _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
+            smallShield, skellyPike, ironClub, wompusGun, protectionBand, freshJs};
+
+            // Initalizes the lists of the items the shop will use when called upon.
+            _itemList1 = new Item[] { bigWand, smallShield, healthPotion, skellyPike };
             _itemList2 = new Item[] { bigStick, bigPotion, ironClub, protectionBand, thaeveBow };
             _itemList3 = new Item[] { wompusGun, protectionBand, bigPotion, freshJs, skellyPike };
             _itemList4 = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion };
+            _itemList5 = new Item[] { bigShield, smallShield, protectionBand, bigPotion, wompusGun };
         }
 
         /// <summary>
@@ -166,46 +171,46 @@ namespace BattleArenaExtended
         private void InitializeEnemies()
         {
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 22, 18, 12, 10);
+            Entity littleDude = new Entity("A Little Dude", 26, 23, 22, 10);
 
             // Initalizes the Stats for Thaeve.
-            Entity thaeve = new Entity("Thaeve", 20, 12, 14, 12);
+            Entity thaeve = new Entity("Thaeve", 24, 24, 21, 12);
 
             // Initalizes the Stats for Wimpus.
-            Entity wimpus = new Entity("Wimpus", 21, 19, 15, 14);
+            Entity wimpus = new Entity("Wimpus", 27, 26, 24, 14);
 
             // Initalizes the Stats for Durdle, the Great Turtle.
-            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 24, 26, 30, 33);
+            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 35, 29, 32, 33);
 
             // Initalizes the Stats for Wompus.
-            Entity wompus = new Entity("Wompus", 33, 22, 15, 25);
+            Entity wompus = new Entity("Wompus", 33, 34, 25, 25);
 
             // Initalizes the Stats for Moneybag.
-            Entity moneybag = new Entity("Moneybag", 15, 34, 22, 43);
+            Entity moneybag = new Entity("Moneybag", 22, 39, 21, 43);
 
             // Initalizes the Stats for Big Dude.
-            Entity bigDude = new Entity("A Big Dude", 31, 25, 18, 20);
+            Entity bigDude = new Entity("A Big Dude", 31, 32, 27, 20);
 
             // Initalizes the Stats for Faceless Horror.
-            Entity facelessHorror = new Entity("Faceless Horror", 26, 29, 18, 22);
+            Entity facelessHorror = new Entity("Faceless Horror", 38, 33, 25, 22);
 
             // Initalizes the Stats for Skelly
-            Entity skelly = new Entity("Skelly", 30, 24, 22, 24);
+            Entity skelly = new Entity("Skelly", 36, 31, 26, 24);
 
             // Initalizes the Stats for Remnant of the World Eater.
             Entity remnant = new Entity("Remnant of the World Eater", 64, 32, 23, 53);
 
             // Initalizes the Stats for Spudette.
-            Entity spudette = new Entity("Spudette", 42, 34, 32, 31);
+            Entity spudette = new Entity("Spudette", 42, 43, 32, 31);
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 32, 22, 34);
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 45, 28, 34);
 
             // Initalizes the Stats for A Big Ol' Dude.
-            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 30, 27, 32);
+            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32);
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 100, 34, 26, 0);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 100, 47, 38, 0);
 
             // Initalizes the the list of enemies for the first level.
             Entity[] levelOne = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle };
@@ -579,7 +584,7 @@ namespace BattleArenaExtended
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 75, 17, 21, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 75, 16, 20, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -783,7 +788,7 @@ namespace BattleArenaExtended
             {
                 case 0:
                     Console.WriteLine("You enter the shop.");
-                    int randomShop = randomNumber.Next(0, 4);
+                    int randomShop = randomNumber.Next(5);
 
                     switch (randomShop)
                     {
@@ -798,6 +803,9 @@ namespace BattleArenaExtended
                             break;
                         case 3:
                             _shop = new Shop(_itemList4);
+                            break;
+                        case 4:
+                            _shop = new Shop(_itemList5);
                             break;
                     }
                     _currentScene = Scene.SHOP_MENU;

@@ -338,9 +338,6 @@ namespace BattleArenaExtended
                 i++;
             }
 
-            // If everything was found correctly, it attempts to equip the item.
-            TryEquipItem(_currentItemIndex);
-
             return true;
         }
     }

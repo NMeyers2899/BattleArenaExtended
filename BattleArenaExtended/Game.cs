@@ -124,7 +124,7 @@ namespace BattleArenaExtended
 
             _itemList = new Item[] { bigStick, bigWand, bigShield, ironClub, healthPotion };
             _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
-            _itemList2 = new Item[] { bigStick, healthPotion, ironClub };
+            _itemList2 = new Item[] { bigStick, bigPotion, ironClub };
             _itemList3 = new Item[] { wompusGun, freshJs, skellyPike };
         }
 
@@ -164,10 +164,13 @@ namespace BattleArenaExtended
             Entity remnant = new Entity("Remnant of the World Eater", 64, 32, 23, 53);
 
             // Initalizes the Stats for Spudette.
-            Entity spudette = new Entity("Spudette", 42, 34, 36, 31);
+            Entity spudette = new Entity("Spudette", 42, 34, 32, 31);
 
             // Initalizes the Stats for Wompus With a Gun.
             Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 32, 22, 34);
+
+            // Initalizes the Stats for A Big Ol' Dude.
+            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 30, 27, 32);
 
             // Initalizes the Stats for The Final Boss.
             Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 100, 34, 26, 0);
@@ -179,23 +182,85 @@ namespace BattleArenaExtended
             Entity[] levelTwo = new Entity[] { wompus, moneybag, bigDude, facelessHorror, skelly, remnant };
 
             // Initalizes the list of enemies for the final level.
-            Entity[] levelThree = new Entity[] { wompusWithGun, spudette, theFinalBoss };
+            Entity[] levelThree = new Entity[] { wompusWithGun, bigOlDude, spudette, theFinalBoss };
+
+            int percentage = randomNumber.Next(101);
+
+            int randomEnemy = 0;
 
             // Initalizes the list of enemies that will be fought per level.
             if (_currentLevel == 1)
             {
                 _enemies = levelOne;
+
+                if(percentage >= 0 && percentage <= 25)
+                {
+                    randomEnemy = 0;
+                }
+                else if (percentage >= 26 && percentage <= 45)
+                {
+                    randomEnemy = 1;
+                }
+                else if (percentage >= 46 && percentage <= 73)
+                {
+                    randomEnemy = 2;
+                }
+                else
+                {
+                    randomEnemy = 3;
+                }
             }
             else if(_currentLevel == 2)
             {
                 _enemies = levelTwo;
+
+                if (percentage >= 0 && percentage <= 25)
+                {
+                    randomEnemy = 0;
+                }
+                else if (percentage >= 26 && percentage <= 32)
+                {
+                    randomEnemy = 1;
+                }
+                else if (percentage >= 33 && percentage <= 48)
+                {
+                    randomEnemy = 2;
+                }
+                else if (percentage >= 49 && percentage <= 62)
+                {
+                    randomEnemy = 3;
+                }
+                else if (percentage >= 63 && percentage <= 74)
+                {
+                    randomEnemy = 4;
+                }
+                else
+                {
+                    randomEnemy = 5;
+                }
+
             }
             else if(_currentLevel == 3)
             {
                 _enemies = levelThree;
-            }
 
-            int randomEnemy = randomNumber.Next(0, _enemies.Length);
+                if (percentage >= 0 && percentage <= 25)
+                {
+                    randomEnemy = 0;
+                }
+                else if (percentage >= 26 && percentage <= 45)
+                {
+                    randomEnemy = 1;
+                }
+                else if (percentage >= 46 && percentage <= 73)
+                {
+                    randomEnemy = 2;
+                }
+                else
+                {
+                    randomEnemy = 3;
+                }
+            }
 
             _currentEnemyIndex = randomEnemy;
 

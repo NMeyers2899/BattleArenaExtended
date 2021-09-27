@@ -747,7 +747,7 @@ namespace BattleArenaExtended
             {
                 case 0:
                     Console.WriteLine("You enter the shop.");
-                    int randomShop = _randomNumber.Next(5);
+                    int randomShop = _randomNumber.Next(0, 5);
 
                     switch (randomShop)
                     {

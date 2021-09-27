@@ -153,7 +153,7 @@ namespace BattleArenaExtended
             _defensiveInventory = new Item[] { smallShield };
 
             _itemList = new Item[] { bigStick, thaeveBow, bigWand, bigShield, ironClub, healthPotion, bigPotion,
-            smallShield, skellyPike, ironClub, wompusGun};
+            smallShield, skellyPike, ironClub, wompusGun, protectionBand};
             _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
             _itemList2 = new Item[] { bigStick, bigPotion, ironClub, protectionBand, thaeveBow };
             _itemList3 = new Item[] { wompusGun, protectionBand, bigPotion, freshJs, skellyPike };

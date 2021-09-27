@@ -35,6 +35,7 @@ namespace BattleArenaExtended
         SKELLY_PIKE,
         IRON_CLUB,
         BIG_POTION,
+        SMALL_SHIELD,
         COUNT
     }
 
@@ -99,11 +100,11 @@ namespace BattleArenaExtended
         {
             Item bigWand = new Item { Name = "Big Wand", StatBoost = 14, BoostType = ItemType.ATTACK, 
             Cost = 14, ID = ItemName.BIG_WAND };
-            Item bigShield = new Item { Name = "Big Shield", StatBoost = 25, BoostType = ItemType.DEFENSE,
+            Item bigShield = new Item { Name = "Big Shield", StatBoost = 22, BoostType = ItemType.DEFENSE,
             Cost = 28, ID = ItemName.BIG_SHIELD };
             Item bigStick = new Item { Name = "Big Stick", StatBoost = 5, BoostType = ItemType.ATTACK,
             Cost = 2, ID = ItemName.BIG_STICK};
-            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 23, BoostType = ItemType.DEFENSE,
+            Item freshJs = new Item { Name = "Fresh J's", StatBoost = 21, BoostType = ItemType.DEFENSE,
             Cost = 23, ID = ItemName.FRESH_JS};
             Item wompusGun = new Item { Name = "Wompus' Gun", StatBoost = 32, BoostType = ItemType.ATTACK,
             Cost = 44, ID = ItemName.WOMPUS_GUN };
@@ -115,9 +116,11 @@ namespace BattleArenaExtended
             Cost = 17, ID = ItemName.IRON_CLUB };
             Item bigPotion = new Item { Name = "Big Potion", StatBoost = 45, BoostType = ItemType.HEALTH,
             Cost = 35, ID = ItemName.BIG_POTION };
+            Item smallShield = new Item { Name = "Small Shield", StatBoost = 16, BoostType = ItemType.DEFENSE,
+            Cost = 12, ID = ItemName.SMALL_SHIELD };
 
             _offensiveInventory = new Item[] { ironClub };
-            _defensiveInventory = new Item[] { bigShield, healthPotion };
+            _defensiveInventory = new Item[] { smallShield, healthPotion };
 
             _itemList = new Item[] { bigStick, bigWand, bigShield, ironClub, healthPotion };
             _itemList1 = new Item[] { bigWand, bigShield, healthPotion, skellyPike };
@@ -535,7 +538,7 @@ namespace BattleArenaExtended
 
             if (_currentEnemy.Name == "Durdle, the Great Turtle" || 
                 _currentEnemy.Name == "Remnant of the World Eater" ||
-                _currentEnemy.Name == "Krazarackaradareda, the World Eater")
+                _currentEnemy.Name == "Krazarackaradareda the World Eater")
             {
                 choice = GetInput("You feel a great presence just ahead. Do you-", "Continue Ahead", "Turn Back");
 
@@ -630,7 +633,7 @@ namespace BattleArenaExtended
                 // If the player has not killed all the enemies, if they have not...
                 if (!(_currentEnemy.Name == "Durdle, the Great Turtle") && 
                     !(_currentEnemy.Name == "Remnant of the World Eater") &&
-                    !(_currentEnemy.Name == "Krazarackaradareda, the World Eater"))
+                    !(_currentEnemy.Name == "Krazarackaradareda the World Eater"))
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
@@ -688,7 +691,7 @@ namespace BattleArenaExtended
             {
                 case 0:
                     Console.WriteLine("You enter the shop.");
-                    int randomShop = randomNumber.Next(0, 2);
+                    int randomShop = randomNumber.Next(0, 4);
 
                     switch (randomShop)
                     {
@@ -700,6 +703,9 @@ namespace BattleArenaExtended
                             break;
                         case 2:
                             _shop = new Shop(_itemList3);
+                            break;
+                        case 3:
+                            _shop = new Shop(_itemList);
                             break;
                     }
                     _currentScene = Scene.SHOP_MENU;

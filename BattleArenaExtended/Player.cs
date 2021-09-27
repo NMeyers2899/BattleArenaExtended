@@ -218,7 +218,10 @@ namespace BattleArenaExtended
 
         }
 
-        // Gets the names of the items in the player's inventory.
+        /// <summary>
+        /// Gets the names of the items in the player's inventory.
+        /// </summary>
+        /// <returns> The array of item names associated with the player's inventory. </returns>
         public string[] GetItemNames()
         {
             string[] itemList = new string[_inventory.Length];

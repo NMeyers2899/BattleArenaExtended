@@ -232,7 +232,7 @@ namespace BattleArenaExtended
                 " dangerous.");
 
             // Initalizes the Stats for Thwompus.
-            Entity thwompus = new Entity("Thwompus", 38, 40, 35, 30, "When a wimpus can't shed its shell, it becomes" +
+            Entity thwompus = new Entity("Thwompus", 38, 40, 35, 30, "When a wimpus can't shed its shell, it" +
                 " is considered a thwompus.");
 
             // Initalizes the Stats for The Final Boss.

@@ -124,6 +124,7 @@ namespace BattleArenaExtended
             writer.WriteLine(_attackPower);
             writer.WriteLine(_defensePower);
             writer.WriteLine(_goldAmount);
+            writer.WriteLine(_description);
         }
 
         /// <summary>
@@ -155,6 +156,8 @@ namespace BattleArenaExtended
             {
                 return false;
             }
+
+            _description = reader.ReadLine();
 
             return true;
         }

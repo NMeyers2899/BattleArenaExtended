@@ -159,7 +159,7 @@ namespace BattleArenaExtended
             Item aegis = new Item { Name = "Aegis", StatBoost = 26, BoostType = ItemType.DEFENSE, Cost = 64,
             ID = ItemName.AEGIS };
 
-            _offensiveInventory = new Item[] { judgementBlade, aegis };
+            _offensiveInventory = new Item[] { thaeveBow, smallShield };
             _defensiveInventory = new Item[] { bigStick, protectionBand };
 
             // Initalizes the list of every item in the game.
@@ -180,7 +180,7 @@ namespace BattleArenaExtended
         private void InitializeEnemies()
         {
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 26, 23, 18, 10, "A territorial creature that weilds a" +
+            Entity littleDude = new Entity("A Little Dude", 26, 23, 18, 12, "A territorial creature that weilds a" +
                 " small spear.");
 
             // Initalizes the Stats for Thaeve.
@@ -188,7 +188,7 @@ namespace BattleArenaExtended
                 " dead of the night to find anything they can scavenge.");
 
             // Initalizes the Stats for Wimpus.
-            Entity wimpus = new Entity("Wimpus", 26, 26, 20, 14, "A juvenile wompus. They have hard shells that" +
+            Entity wimpus = new Entity("Wimpus", 26, 26, 20, 15, "A juvenile wompus. They have hard shells that" +
                 " they later shed once they mature.");
 
             // Initalizes the Stats for Durdle, the Great Turtle.
@@ -682,7 +682,7 @@ namespace BattleArenaExtended
                     }
                     else
                     {
-                        Console.WriteLine("You placed the item in your bag.");
+                        Console.WriteLine("You place your equipment in your bag.");
                     }
                     Console.ReadKey(true);
                     Console.Clear();
@@ -712,7 +712,7 @@ namespace BattleArenaExtended
         void CheckBattleResults()
         {
             // If the _player is still alive and the enemy is dead, it moves on to the next fight.
-            if (_currentEnemy.Health <= 0)
+            if (_currentEnemy.Health <= 0 && _player.Health > 0)
             {
                 Console.WriteLine("You defeated " + _currentEnemy.Name + "!");
                 Console.ReadKey(true);
@@ -721,11 +721,11 @@ namespace BattleArenaExtended
                 // Adds the gold the enemy drops to the player's gold count.
                 _player.GetGold(_currentEnemy);
 
-                // If the player has not killed all the enemies, if they have not...
+                // If the player has not killed all the bosses, if they have not...
                 if (!(_currentEnemy.Name == "Durdle, the Great Turtle") &&
                     !(_currentEnemy.Name == "Remnant of the World Eater") &&
                     !(_currentEnemy.Name == "Krazarackaradareda the World Eater") &&
-                    !(_currentEnemy.Name == "[REDACTED]") && _player.Health > 0)
+                    !(_currentEnemy.Name == "[REDACTED]"))
                 {
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
@@ -757,7 +757,7 @@ namespace BattleArenaExtended
                     Console.Clear();
 
                     // Initalizes the Stats for [REDACTED].
-                    _currentEnemy = new Entity("[REDACTED]", 123, 64, 40, 0, "You can't win.");
+                    _currentEnemy = new Entity("[REDACTED]", 123, 64, 40, 0, "There is nothing you can know.");
                     return;
                 }
                 // Check to see if the player has defeated [REDACTED].
@@ -788,15 +788,13 @@ namespace BattleArenaExtended
         /// </summary>
         public void EnterShop()
         {
-            if (_currentEnemyIndex >= _enemies.Length)
-            {
-                return;
-            }
-
+            // Gets the player's choice for whether or not they wish to enter the shop.
             int choice = GetInput("You come across a shop in your travels. Do you enter?", "Yes.", "No.");
 
+            // If they choose...
             switch (choice)
             {
+                // ...to enter, they get a random shop that has a list of random items.
                 case 0:
                     Console.WriteLine("You enter the shop.");
                     int randomShop = _randomNumber.Next(0, 5);
@@ -821,6 +819,7 @@ namespace BattleArenaExtended
                     }
                     _currentScene = Scene.SHOP_MENU;
                     break;
+                // ...they do not shop, and instead recieve this message.
                 case 1:
                     Console.WriteLine("You move on to your next battle.");
                     _currentScene = Scene.BATTLE_PREP;
@@ -879,13 +878,16 @@ namespace BattleArenaExtended
             // If the player picks...
             if (choice == menuOptions.Length - 1)
             {
+                // ...to exit the shop.
                 Console.WriteLine("Do come again, friend!");
                 Console.ReadKey(true);
                 Console.Clear();
                 _currentScene = Scene.BATTLE_PREP;
             }
+            // If the player picks...
             else if (!_shop.Sell(_player, choice))
             {
+                // ...an item, it checks to see if the shop can sell. If it cannot, they recieve this message.
                 Console.WriteLine("Very sorry. I do not go lower in my prices.");
                 Console.ReadKey(true);
                 Console.Clear();

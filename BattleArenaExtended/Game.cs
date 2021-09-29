@@ -545,8 +545,8 @@ namespace BattleArenaExtended
         }
 
         /// <summary>
-        /// Displays text asking for the players name. Doesn't transition to the next section
-        /// until the _player decides to keep the name.
+        /// Displays text asking for the player's name. Doesn't transition to the next section
+        /// until the player decides to keep the name.
         /// </summary>
         void GetPlayerName()
         {

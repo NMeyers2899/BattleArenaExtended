@@ -19,6 +19,7 @@ namespace BattleArenaExtended
             get { return _currentItem; }
         }
 
+        // Gets the player's health. If it is over 100, it sets health to 100.
         public override float Health
         {
             get
@@ -33,6 +34,7 @@ namespace BattleArenaExtended
             }
         }
 
+        // Gets the player's attack based on if they have equipment or not.
         public override float AttackPower
         {
             get
@@ -46,6 +48,7 @@ namespace BattleArenaExtended
             }
         }
 
+        // Gets the player's defense based on if they have equipment or not.
         public override float DefensePower
         {
             get
@@ -260,12 +263,22 @@ namespace BattleArenaExtended
         /// <param name="writer"> What writes to the file. </param>
         public override void Save(StreamWriter writer)
         {
+            // Saves the player's job.
             writer.WriteLine(_job);
+
+            // Calls upon the base save to writer down the player's stats.
             base.Save(writer);
+
+            // Saves the length of the player's inventory.
             writer.WriteLine(_inventory.Length);
+
+            // Saves the player's gold.
             writer.WriteLine(_gold);
+
+            // Saves the current item index for the player.
             writer.WriteLine(_currentItemIndex);
 
+            // Saves the ID's for each item in the player's inventory.
             for (int i = 0; i < _inventory.Length; i++)
             {
                 writer.WriteLine(_inventory[i].ID);

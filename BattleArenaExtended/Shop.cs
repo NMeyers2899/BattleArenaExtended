@@ -21,12 +21,16 @@ namespace BattleArenaExtended
         /// <returns> Whether or not the player has enough gold for the item. </returns>
         public bool Sell(Player player, int position)
         {
+            // Checks to see if the player has enough gold to purchase the item, if they do not...
             if (player.Gold < _inventory[position].Cost)
             {
+                // ...it returns false.
                 return false;
             }
+            // If the player has enough gold...
             else
             {
+                // ...they buy the item, and return true.
                 player.Buy(_inventory[position]);
                 return true;
             }

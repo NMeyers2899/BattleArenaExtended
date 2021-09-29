@@ -340,6 +340,7 @@ namespace BattleArenaExtended
                 return false;
             }
 
+            // Gets the current group of enemies that it should look at.
             InitializeEnemies();
 
             // Creates a new instance of the current enemy.
@@ -483,15 +484,19 @@ namespace BattleArenaExtended
                     break;
                 // ...load a previous save.
                 case 2:
+                    // Check to see if the load is successful...
                     if (Load())
                     {
+                        // ...if it is, it returns the user to the battle.
                         Console.WriteLine("Load Succssesful");
                         Console.ReadKey(true);
                         Console.Clear();
                         _currentScene = Scene.BATTLE;
                     }
+                    // If the load is not successful...
                     else
                     {
+                        // ...it lets the player know the load failed, and sends them back to the start menu.
                         Console.WriteLine("Load Failed");
                         Console.ReadKey(true);
                         Console.Clear();
@@ -511,19 +516,25 @@ namespace BattleArenaExtended
 
             switch (choice)
             {
+                // This sends the user to name their character.
                 case 0:
                     _currentScene = Scene.NAME_CREATION;
                     break;
+                // This allows the player to load a previous save.
                 case 1:
+                    // Check to see if the load is successful...
                     if (Load())
                     {
+                        // ...if it is, it returns the user to the battle.
                         Console.WriteLine("Load Succssesful");
                         Console.ReadKey(true);
                         Console.Clear();
                         _currentScene = Scene.BATTLE;
                     }
+                    // If the load is not successful...
                     else
                     {
+                        // ...it lets the player know the load failed, and sends them back to the start menu.
                         Console.WriteLine("Load Failed");
                         Console.ReadKey(true);
                         Console.Clear();
@@ -576,11 +587,11 @@ namespace BattleArenaExtended
             {
                 // ...be a more physical fighter.
                 case 0:
-                    _player = new Player(_playerName, 80, 22, 15, _offensiveInventory, "Offensive");
+                    _player = new Player(_playerName, 50, 22, 15, _offensiveInventory, "Offensive");
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 80, 20, 16, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 50, 20, 16, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -590,7 +601,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Prints a character's stats to the console.
         /// </summary>
-        /// <param name="character"> The character that will have its stats shown </param>
+        /// <param name="character"> The character that will have its stats shown. </param>
         void DisplayStats(Entity character)
         {
             Console.WriteLine(character.Name + "'s stats:");
@@ -624,7 +635,6 @@ namespace BattleArenaExtended
         /// <summary>
         /// If the enemy is a boss, we check to see if the player wishes to continue.
         /// </summary>
-        /// <returns> If the boss is fought or not, if it is even encountered. </returns>
         public void BattlePrep()
         {
             int choice = 0;
@@ -646,13 +656,14 @@ namespace BattleArenaExtended
                         Console.ReadKey(true);
                         Console.Clear();
                         break;
-                    // ...sets _currentEnemy to something new, and goes back through battle prep.
+                    // ...sets the current enemy to something new, and goes back through battle prep.
                     case 1:
                         InitializeEnemies();
                         Console.WriteLine("You turn back, to return another day.");
                         Console.ReadKey(true);
                         Console.Clear();
-                        break;
+                        _currentScene = Scene.BATTLE_PREP;
+                        return;
                 }
             }
 
@@ -666,7 +677,7 @@ namespace BattleArenaExtended
         {
             float damageDealt = 0;
 
-            // Gives updates on the _player and current enemy's stats.
+            // Gives updates on the player and current enemy's stats.
             DisplayStats(_player);
             Console.WriteLine("");
             DisplayStats(_currentEnemy);
@@ -674,17 +685,18 @@ namespace BattleArenaExtended
 
             int choice = GetInput(_currentEnemy.Name + " stands before you! What will you do?",
                 "Attack!", "Equip/Use Item.", "Remove Current Item.", "Inspect", "Save.");
-            // Finds out if the _player wishes to...
+            // Finds out if the player wishes to...
             switch (choice)
             {
                 // ...attack, dealing damage to the enemy. In turn taking damage from the enemy.
                 case 0:
                     damageDealt = _player.Attack(_currentEnemy);
                     break;
-                // ... dodge the enemy's attack, but deal no damage in return.
+                // ...go through the items they have and use or equip one.
                 case 1:
                     DisplayEquipItemMenu();
                     return;
+                // ...attempt to unequip the items they currently have on them.
                 case 2:
                     if (!_player.TryUnequipItem())
                     {
@@ -697,11 +709,13 @@ namespace BattleArenaExtended
                     Console.ReadKey(true);
                     Console.Clear();
                     return;
+                // ...view a description of the enemy.
                 case 3:
                     Console.WriteLine(_currentEnemy.Description);
                     Console.ReadKey(true);
                     Console.Clear();
                     return;
+                // ...save the game.
                 case 4:
                     Save();
                     Console.WriteLine("Saved Game");
@@ -716,7 +730,7 @@ namespace BattleArenaExtended
         }
 
         /// <summary>
-        /// Checks to see if either the _player or the enemy has won the current battle.
+        /// Checks to see if either the player or the enemy has won the current battle.
         /// Updates the game based on who won the battle.
         /// </summary>
         void CheckBattleResults()
@@ -740,7 +754,7 @@ namespace BattleArenaExtended
                     // ...ask the player if they wish to enter the shop.
                     EnterShop();
                 }
-                // If the player has killed Durdle, the system will...
+                // If the player has killed Durdle or Remnant, the system will...
                 else if(_currentEnemy.Name == "Durdle, the Great Turtle" || 
                     _currentEnemy.Name == "Remnant of the World Eater")
                 {
@@ -748,8 +762,10 @@ namespace BattleArenaExtended
                     EnterShop();
                     _currentLevel++;
                 }
+                // If the player has killed the final boss, it will...
                 else if (_currentEnemy.Name == "Krazarackaradareda the World Eater")
                 {
+                    // ...commence the sequence for the true final battle.
                     Console.WriteLine("But you didn't think that was it, did you?");
                     Console.ReadKey(true);
                     Console.Clear();

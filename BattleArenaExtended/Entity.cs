@@ -87,10 +87,13 @@ namespace BattleArenaExtended
         /// <returns> The amount of damage being dealt. </returns>
         public float TakeDamage(float damageAmount)
         {
+            // Gets the amount of damage being dealt to the entity.
             float damageTaken = damageAmount - DefensePower;
 
+            // If the damage being taken is less than zero...
             if (damageTaken < 0)
             {
+                // ...it sets it equal to zero.
                 damageTaken = 0;
             }
 

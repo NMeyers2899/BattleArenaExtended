@@ -93,7 +93,8 @@ namespace BattleArenaExtended
         }
 
         public Player(string name, float health, float attackPower, float defensePower, Item[] items, string job,
-            int goldAmount = 0) : base(name, health, attackPower, defensePower, goldAmount)
+            int goldAmount = 0, string description = "You") 
+            : base(name, health, attackPower, defensePower, goldAmount, description)
         {
             _inventory = items;
             _currentItem.Name = "Nothing";

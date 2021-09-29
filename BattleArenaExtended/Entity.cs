@@ -13,6 +13,7 @@ namespace BattleArenaExtended
         private float _attackPower;
         private float _defensePower;
         private int _goldAmount;
+        private string _description;
 
         // Gets the entity's name.
         public string Name
@@ -44,6 +45,11 @@ namespace BattleArenaExtended
             get { return _goldAmount; }
         }
 
+        public string Description
+        {
+            get { return _description; }
+        }
+
         /// <summary>
         /// Default constructor of entity.
         /// </summary>
@@ -63,13 +69,15 @@ namespace BattleArenaExtended
         /// <param name="health"> The entity's health. </param>
         /// <param name="attackPower"> The entity's attack. </param>
         /// <param name="defensePower"> The entity's defense. </param>
-        public Entity(string name, float health, float attackPower, float defensePower, int goldAmount)
+        public Entity(string name, float health, float attackPower, float defensePower, int goldAmount, 
+            string description)
         {
             _name = name;
             _health = health;
             _attackPower = attackPower;
             _defensePower = defensePower;
             _goldAmount = goldAmount;
+            _description = description;
         }
 
         /// <summary>

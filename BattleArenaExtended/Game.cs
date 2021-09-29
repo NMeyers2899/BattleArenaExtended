@@ -180,46 +180,57 @@ namespace BattleArenaExtended
         private void InitializeEnemies()
         {
             // Initalizes the Stats for Little Dude.
-            Entity littleDude = new Entity("A Little Dude", 26, 23, 18, 10);
+            Entity littleDude = new Entity("A Little Dude", 26, 23, 18, 10, "A territorial creature that weilds a" +
+                " small spear.");
 
             // Initalizes the Stats for Thaeve.
-            Entity thaeve = new Entity("Thaeve", 24, 24, 15, 12);
+            Entity thaeve = new Entity("Thaeve", 24, 24, 15, 12, "These mischevious fiends scour towns in the" +
+                " dead of the night to find anything they can scavenge.");
 
             // Initalizes the Stats for Wimpus.
-            Entity wimpus = new Entity("Wimpus", 26, 26, 20, 14);
+            Entity wimpus = new Entity("Wimpus", 26, 26, 20, 14, "A juvenile wompus. They have hard shells that" +
+                " they later shed once they mature.");
 
             // Initalizes the Stats for Durdle, the Great Turtle.
-            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 35, 29, 32, 33);
+            Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 35, 29, 32, 33, "The first real battle" +
+                " you'll have. Durdle has high defense, so best bring a good weapon along.");
 
             // Initalizes the Stats for Wompus.
-            Entity wompus = new Entity("Wompus", 33, 34, 25, 25);
+            Entity wompus = new Entity("Wompus", 33, 34, 25, 25, "Because of their short legs, they use their " +
+                "burly arms to carry them around.");
 
             // Initalizes the Stats for Moneybag.
-            Entity moneybag = new Entity("Moneybag", 22, 39, 21, 43);
+            Entity moneybag = new Entity("Moneybag", 22, 39, 21, 43, "A living moneybag, defeat it to get the gold" +
+                " it holds.");
 
             // Initalizes the Stats for Big Dude.
-            Entity bigDude = new Entity("A Big Dude", 31, 32, 27, 20);
+            Entity bigDude = new Entity("A Big Dude", 31, 32, 27, 20, "The big brother of the little dudes. Despite" +
+                " their similarities, it is unknown if the two are related.");
 
             // Initalizes the Stats for Faceless Horror.
-            Entity facelessHorror = new Entity("Faceless Horror", 38, 33, 25, 22);
+            Entity facelessHorror = new Entity("Faceless Horror", 38, 33, 25, 22, "It stares without eyes.");
 
             // Initalizes the Stats for Skelly
-            Entity skelly = new Entity("Skelly", 36, 31, 26, 24);
+            Entity skelly = new Entity("Skelly", 36, 31, 26, 24, "A fallen soldier of a long forgotten kingdom.");
 
             // Initalizes the Stats for Remnant of the World Eater.
-            Entity remnant = new Entity("Remnant of the World Eater", 69, 45, 34, 53);
+            Entity remnant = new Entity("Remnant of the World Eater", 69, 45, 34, 53, "This is what is left after" +
+                " an attack from the World Eater. Best to put it out of its misery.");
 
             // Initalizes the Stats for Spudette.
-            Entity spudette = new Entity("Spudette", 42, 43, 32, 31);
+            Entity spudette = new Entity("Spudette", 42, 43, 32, 31, "A chonk.");
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 45, 28, 34);
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 45, 28, 34, "Who gave it a gun?! Why does" +
+                " it have a gun?! Who thought it would be a good idea to give these things guns?!");
 
             // Initalizes the Stats for A Big Ol' Dude.
-            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32);
+            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32, "The biggest of dudes, and the most" +
+                " dangerous.");
 
             // Initalizes the Stats for The Final Boss.
-            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 96, 54, 43, 0);
+            Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 96, 54, 43, 0, "This is it, the" +
+                " World Eater. Each time it devours a world, it adds a syllable to its name.");
 
             // If the level is one...
             if (_currentLevel == 1)
@@ -325,7 +336,7 @@ namespace BattleArenaExtended
             // Updates the enemy array to the current enemy's stats.
             _enemies[_currentEnemyIndex] = _currentEnemy;
 
-            // Creates a new instance of the current enemy.
+            // Creates a new instance of the player.
             _player = new Player();
 
             // Checks to see if the player can load their previous stats, if not...
@@ -437,7 +448,7 @@ namespace BattleArenaExtended
         /// </summary>
         private void DisplayRestartMenu()
         {
-            int choice = GetInput("Would you like to restart the game?", "Yes!", "No.");
+            int choice = GetInput("Would you like to restart the game?", "Yes!", "No.", "Load Game.");
             // Finds out whether the _player wishes to...
             switch (choice)
             {
@@ -449,6 +460,23 @@ namespace BattleArenaExtended
                 // ...end the game.
                 case 1:
                     _gameOver = true;
+                    break;
+                // ...load a previous save.
+                case 2:
+                    if (Load())
+                    {
+                        Console.WriteLine("Load Succssesful");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        _currentScene = Scene.BATTLE;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Load Failed");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        _currentScene = Scene.START_MENU;
+                    }
                     break;
             }
         }
@@ -491,17 +519,22 @@ namespace BattleArenaExtended
         /// </summary>
         void GetPlayerName()
         {
+            // Asks the user for their name.
             Console.Write("What is your name, adventurer? \n> ");
             _playerName = Console.ReadLine();
             Console.Clear();
 
+            // Asks the user if they would like to keep their name.
             int choice = GetInput("Would you like to keep your name?", "Yes.", "No.");
 
+            // Looks at the users choice, depending on what it is...
             switch (choice)
             {
+                // ...it will send them to choose their class.
                 case 0:
                     _currentScene = Scene.CHARACTER_SELECTION;
                     break;
+                // ...or it will replay the event, allowing them to choose a new name.
                 case 1:
                     break;
             }
@@ -527,7 +560,7 @@ namespace BattleArenaExtended
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 70, 20, 17, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 80, 20, 17, _defensiveInventory, "Defensive");
                     break;
             }
 
@@ -576,19 +609,24 @@ namespace BattleArenaExtended
         {
             int choice = 0;
 
+            // Checks to see if the enemy is one of the three bosses. If it is...
             if (_currentEnemy.Name == "Durdle, the Great Turtle" || 
                 _currentEnemy.Name == "Remnant of the World Eater" ||
                 _currentEnemy.Name == "Krazarackaradareda the World Eater")
             {
+                // ...it asks if they would like to fight them or go to a different fight.
                 choice = GetInput("You feel a great presence just ahead. Do you-", "Continue Ahead", "Turn Back");
 
+                // Checks the users choice, depending on what they choose it...
                 switch (choice)
                 {
+                    // ...lets them fight the boss.
                     case 0:
                         Console.WriteLine("You continue on ahead.");
                         Console.ReadKey(true);
                         Console.Clear();
                         break;
+                    // ...sets _currentEnemy to something new, and goes back through battle prep.
                     case 1:
                         InitializeEnemies();
                         Console.WriteLine("You turn back, to return another day.");
@@ -615,7 +653,7 @@ namespace BattleArenaExtended
             Console.WriteLine("");
 
             int choice = GetInput(_currentEnemy.Name + " stands before you! What will you do?",
-                "Attack!", "Equip/Use Item.", "Remove Current Item.", "Save.");
+                "Attack!", "Equip/Use Item.", "Remove Current Item.", "Inspect", "Save.");
             // Finds out if the _player wishes to...
             switch (choice)
             {
@@ -636,11 +674,15 @@ namespace BattleArenaExtended
                     {
                         Console.WriteLine("You placed the item in your bag.");
                     }
-
                     Console.ReadKey(true);
                     Console.Clear();
                     return;
                 case 3:
+                    Console.WriteLine(_currentEnemy.Description);
+                    Console.ReadKey(true);
+                    Console.Clear();
+                    return;
+                case 4:
                     Save();
                     Console.WriteLine("Saved Game");
                     Console.ReadKey(true);
@@ -705,7 +747,7 @@ namespace BattleArenaExtended
                     Console.Clear();
 
                     // Initalizes the Stats for [REDACTED].
-                    _currentEnemy = new Entity("[REDACTED]", 123, 64, 40, 0);
+                    _currentEnemy = new Entity("[REDACTED]", 123, 64, 40, 0, "You can't win.");
                     return;
                 }
                 // Check to see if the player has defeated [REDACTED].

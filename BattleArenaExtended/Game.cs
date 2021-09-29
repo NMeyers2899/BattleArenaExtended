@@ -101,7 +101,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Initalizes the items for the game.
         /// </summary>
-        public void InitializeItems()
+        private void InitializeItems()
         {
             // Initalizes the stats for the Big Wand.
             Item bigWand = new Item { Name = "Big Wand", StatBoost = 14, BoostType = ItemType.ATTACK, 

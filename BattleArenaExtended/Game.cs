@@ -221,8 +221,8 @@ namespace BattleArenaExtended
             Entity spudette = new Entity("Spudette", 42, 43, 32, 31, "A chonk.");
 
             // Initalizes the Stats for Wompus With a Gun.
-            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 45, 28, 34, "Who gave it a gun?! Why does" +
-                " it have a gun?! Who thought it would be a good idea to give these things guns?!");
+            Entity wompusWithGun = new Entity("Wompus With a Gun", 44, 45, 28, 34, "Why does it have a gun?! Who gave" +
+                " it a gun?! Who thought it would be a good idea to give these things guns?!");
 
             // Initalizes the Stats for A Big Ol' Dude.
             Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32, "The biggest of dudes, and the most" +

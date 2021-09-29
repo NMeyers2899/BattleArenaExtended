@@ -191,6 +191,9 @@ namespace BattleArenaExtended
             Entity wimpus = new Entity("Wimpus", 26, 26, 20, 15, "A juvenile wompus. They have hard shells that" +
                 " they later shed once they mature.");
 
+            // Initalizes the Stats for Mad Man.
+            Entity madMan = new Entity("Mad Man", 22, 28, 16, 13, "Corrupted by something horrific.");
+
             // Initalizes the Stats for Durdle, the Great Turtle.
             Entity durdleTheTurtle = new Entity("Durdle, the Great Turtle", 35, 29, 32, 33, "The first real battle" +
                 " you'll have. Durdle has high defense, so best bring a good weapon along.");
@@ -225,8 +228,12 @@ namespace BattleArenaExtended
                 " it a gun?! Who thought it would be a good idea to give these things guns?!");
 
             // Initalizes the Stats for A Big Ol' Dude.
-            Entity bigOlDude = new Entity("Big Ol' Dude", 48, 39, 27, 32, "The biggest of dudes, and the most" +
+            Entity bigOlDude = new Entity("A Big Ol' Dude", 48, 39, 27, 32, "The biggest of dudes, and the most" +
                 " dangerous.");
+
+            // Initalizes the Stats for Thwompus.
+            Entity thwompus = new Entity("Thwompus", 38, 40, 35, 30, "When a wimpus can't shed its shell, it becomes" +
+                " is considered a thwompus.");
 
             // Initalizes the Stats for The Final Boss.
             Entity theFinalBoss = new Entity("Krazarackaradareda the World Eater", 96, 54, 43, 0, "This is it, the" +
@@ -236,7 +243,7 @@ namespace BattleArenaExtended
             if (_currentLevel == 1)
             {
                 // ...initalize the list for level one.
-                _enemies = new Entity[] { littleDude, thaeve, wimpus, durdleTheTurtle }; ;
+                _enemies = new Entity[] { littleDude, thaeve, wimpus, madMan, durdleTheTurtle }; ;
 
             }
             // If the level is two...
@@ -250,7 +257,7 @@ namespace BattleArenaExtended
             else if (_currentLevel == 3)
             {
                 // ...initalize the list for level three.
-                _enemies = new Entity[] { wompusWithGun, bigOlDude, spudette, theFinalBoss };
+                _enemies = new Entity[] { wompusWithGun, bigOlDude, thwompus, spudette, theFinalBoss };
             }
 
             int randomEnemy = _randomNumber.Next(_enemies.Length);
@@ -332,6 +339,8 @@ namespace BattleArenaExtended
                 // ...it returns false.
                 return false;
             }
+
+            InitializeEnemies();
 
             // Creates a new instance of the current enemy.
             _currentEnemy = new Entity();
@@ -465,6 +474,7 @@ namespace BattleArenaExtended
                 // ...restart the game.
                 case 0:
                     _currentScene = 0;
+                    _currentLevel = 1;
                     InitializeEnemies();
                     break;
                 // ...end the game.
@@ -570,7 +580,7 @@ namespace BattleArenaExtended
                     break;
                 // ...or rely on defense more.
                 case 1:
-                    _player = new Player(_playerName, 80, 20, 17, _defensiveInventory, "Defensive");
+                    _player = new Player(_playerName, 80, 20, 16, _defensiveInventory, "Defensive");
                     break;
             }
 

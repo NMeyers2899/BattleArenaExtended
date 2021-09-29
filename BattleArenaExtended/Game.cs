@@ -159,7 +159,7 @@ namespace BattleArenaExtended
             Item aegis = new Item { Name = "Aegis", StatBoost = 26, BoostType = ItemType.DEFENSE, Cost = 64,
             ID = ItemName.AEGIS };
 
-            _offensiveInventory = new Item[] { thaeveBow, smallShield };
+            _offensiveInventory = new Item[] { judgementBlade, aegis };
             _defensiveInventory = new Item[] { bigStick, protectionBand };
 
             // Initalizes the list of every item in the game.
@@ -287,6 +287,9 @@ namespace BattleArenaExtended
             // Saves the current enemy index.
             writer.WriteLine(_currentEnemyIndex);
 
+            // Saves the current level the player is on.
+            writer.WriteLine(_currentLevel);
+
             // Saves the current stats for the enemy.
             _currentEnemy.Save(writer);
 
@@ -318,6 +321,13 @@ namespace BattleArenaExtended
 
             // Sets the current enemy index from the file. If it can't...
             if (!int.TryParse(reader.ReadLine(), out _currentEnemyIndex))
+            {
+                // ...it returns false.
+                return false;
+            }
+
+            // Sets the current level from the file. If it can't...
+            if (!int.TryParse(reader.ReadLine(), out _currentLevel))
             {
                 // ...it returns false.
                 return false;

@@ -510,7 +510,7 @@ namespace BattleArenaExtended
         /// Displays the menu for the start of the game, allowing the player to start through the battles
         /// or load a previous save.
         /// </summary>
-        public void DisplayStartMenu()
+        private void DisplayStartMenu()
         {
             int choice = GetInput("Welcome to your Odd Adventure!", "Start New Game", "Load Game");
 

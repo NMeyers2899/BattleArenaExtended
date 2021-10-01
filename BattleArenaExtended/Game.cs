@@ -548,7 +548,7 @@ namespace BattleArenaExtended
         /// Displays text asking for the player's name. Doesn't transition to the next section
         /// until the player decides to keep the name.
         /// </summary>
-        void GetPlayerName()
+        private void GetPlayerName()
         {
             // Asks the user for their name.
             Console.Write("What is your name, adventurer? \n> ");
@@ -574,7 +574,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Gets the players choice of character. Updates player stats based on the character chosen.
         /// </summary>
-        public void CharacterSelection()
+        private void CharacterSelection()
         {
             int choice = 0;
 
@@ -602,7 +602,7 @@ namespace BattleArenaExtended
         /// Prints a character's stats to the console.
         /// </summary>
         /// <param name="character"> The character that will have its stats shown. </param>
-        void DisplayStats(Entity character)
+        private void DisplayStats(Entity character)
         {
             Console.WriteLine(character.Name + "'s stats:");
             Console.WriteLine("Health: " + character.Health);
@@ -613,7 +613,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Allows the player to equip or unequip an item.
         /// </summary>
-        public void DisplayEquipItemMenu()
+        private void DisplayEquipItemMenu()
         {
             // Get the item index.
             int choice = GetInput("Select an item to equip or use.", _player.GetItemNames());
@@ -635,7 +635,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// If the enemy is a boss, we check to see if the player wishes to continue.
         /// </summary>
-        public void BattlePrep()
+        private void BattlePrep()
         {
             int choice = 0;
 
@@ -673,7 +673,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Simulates one turn in the current monster fight
         /// </summary>
-        public void Battle()
+        private void Battle()
         {
             float damageDealt = 0;
 
@@ -733,7 +733,7 @@ namespace BattleArenaExtended
         /// Checks to see if either the player or the enemy has won the current battle.
         /// Updates the game based on who won the battle.
         /// </summary>
-        void CheckBattleResults()
+        private void CheckBattleResults()
         {
             // If the _player is still alive and the enemy is dead, it moves on to the next fight.
             if (_currentEnemy.Health <= 0 && _player.Health > 0)
@@ -812,7 +812,7 @@ namespace BattleArenaExtended
         /// <summary>
         /// Gives the player the option to enter the shop or continue to the next battle.
         /// </summary>
-        public void EnterShop()
+        private void EnterShop()
         {
             // Gets the player's choice for whether or not they wish to enter the shop.
             int choice = GetInput("You come across a shop in your travels. Do you enter?", "Yes.", "No.");
